@@ -22,7 +22,7 @@ public:
 	inline const std::unordered_map<StatType, int>& getStats() const { return stats; }
 	inline std::string getName() const { return name; }
 
-	// Modifiers;
+	// Modifiers
 	void takeDamage(int dmg);
 
 private:
