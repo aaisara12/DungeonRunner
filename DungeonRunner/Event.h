@@ -2,15 +2,18 @@
 #include<list>
 #include "Observer.h"
 template <typename EventData>
-class Subject
+class Event
 {
 public:
-	void addObserver(Observer<EventData>* observer);
-	void removeObserver(Observer<EventData>* observer);
+	void addListener(Observer<EventData>* observer);
+	void removeListener(Observer<EventData>* observer);
 
-protected:
-	// Broadcast to all observers (iterate through all observers and notify)
+	// This is public since we're going to treat Subjects in this case
+	// more like events that can be instantiated multiple times for
+	// a particular user
 	void Invoke();
+
+	
 
 private:
 	// Use list instead of vector here since there probably won't be
