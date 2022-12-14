@@ -4,16 +4,7 @@
 #include<string>
 #include "Event.h"
 
-// Data structure for holding information about an updated container-based value
-// Container-based values are those that start at 0 and cap at some value
-struct ContainerUpdateData
-{
-	uint32_t newContainerMax;
-	uint32_t newContainerCurrent;
-};
-
-
-
+struct ContainerUpdateEventData;
 class Character
 {
 public:
@@ -31,7 +22,7 @@ public:
 
 	// Accessers
 	inline const std::unordered_map<StatType, int>& getStats() const { return stats; }
-	inline Event<ContainerUpdateData>& getHealthDataChangedEvent() { return healthDataChangedEvent; }
+	inline Event<ContainerUpdateEventData>& getHealthDataChangedEvent() { return healthDataChangedEvent; }
 	inline std::string getName() const { return name; }
 
 	// Modifiers
@@ -43,5 +34,13 @@ private:
 	std::string name;
 	
 	// Event invoked when this character's health information is changed
-	Event<ContainerUpdateData> healthDataChangedEvent;
+	Event<ContainerUpdateEventData> healthDataChangedEvent;
+};
+
+// Data structure for holding information about an updated container-based value
+// Container-based values are those that start at 0 and cap at some value
+struct ContainerUpdateEventData
+{
+	uint32_t newContainerMax;
+	uint32_t newContainerCurrent;
 };

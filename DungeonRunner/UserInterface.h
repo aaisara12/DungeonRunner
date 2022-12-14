@@ -17,6 +17,7 @@ public:
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
 
+
 protected:
 	// Returns a visual representation of the UI
 	virtual std::string display() = 0;
