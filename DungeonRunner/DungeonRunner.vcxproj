@@ -148,6 +148,7 @@
     <ClInclude Include="HealthBarUserInterface.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="InputReader.h" />
+    <ClInclude Include="MainMenuUserInterface.h" />
     <ClInclude Include="MenuProcess.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Event.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HealthBarUserInterface.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuUserInterface.cpp" />
     <ClCompile Include="MenuProcess.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>

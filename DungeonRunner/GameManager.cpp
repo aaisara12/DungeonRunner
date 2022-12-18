@@ -6,6 +6,7 @@
 #include "Character.h"
 #include "Process.h"
 #include "MenuProcess.h"
+#include "MainMenuUserInterface.h"
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
 	: characters(characters), inputReader(inputReader)
@@ -25,13 +26,14 @@ void GameManager::start()
 	// inform the game that the battle has concluded,
 	// ultimately causing the game to terminate
 	
-
-	// TODO: Implement two processes:
-	// 1. Start menu: Asks user what they want to do
-	// 2. Battle: Runs battle logic
+	// TODO:
+	// 0. Implement base functionality for UI framing
+	// 1. Implement basic UI to go with the menu process (just like a diagram of your options)
+	// 2. Implement simple battle process (single character, deal damage every turn)
+	// 3. Implement basic UI to go with the battle process (just the health bar)
 
 	// Add the start up process
-	addProcess(new MenuProcess(inputReader, *this), new std::list<UserInterface*>());
+	addProcess(new MenuProcess(inputReader, *this), new std::list<UserInterface*>{new MainMenuUserInterface("DUNGEON RUNNER")});
 
 	clock_t timeOfLastFrame = clock();
 
