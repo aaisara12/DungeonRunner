@@ -1,9 +1,9 @@
 #include "MainMenuUserInterface.h"
 
 MainMenuUserInterface::MainMenuUserInterface( std::string title)
-    :UserInterface(100, 1)
+    :UserInterface(50, 2)
 {
-    currentDisplay.push_back(DisplayLine(title, LEFT));
+    currentDisplay.push_back(DisplayLine(title, CENTER));
 }
 
 const std::vector<UserInterface::DisplayLine>& MainMenuUserInterface::display()

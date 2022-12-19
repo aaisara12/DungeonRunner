@@ -14,7 +14,7 @@ public:
 		CENTER
 	};
 
-	UserInterface(int frameWidthInCharacters, int framePaddingInCharacters);
+	UserInterface(int frameWidthInCharacters, int framePaddingInUnits);
 
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
@@ -48,7 +48,8 @@ private:
 	// Frame width is defined by number of characters between first "//" and last "//"
 	// so that a border of thickness 2 = "//" is always guaranteed
 	int frameWidthInCharacters;
-	int framePaddingInCharacters;
+	int horizontalFramePaddingInCharacters;
+	int verticalFramePaddingInCharacters;
 
 	// DESIGN CHOICE: Don't specify frame height since we almost always want
 	// to make the frame as large as tall as the content for the frame.

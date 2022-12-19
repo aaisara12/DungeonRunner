@@ -1,7 +1,13 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInCharacters)
-    :frameWidthInCharacters(frameWidthInCharacters), framePaddingInCharacters(framePaddingInCharacters)
+// DESIGN CHOICE: Derive vertical and horizontal padding from abstract "units"
+// to make it easier for the implementor of a derived class to get their intended
+// look. In most cases, the horizontal frame padding will look best if it's twice
+// that of the vertical frame padding since the vertical height of one character
+// is about twice its width.
+UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInUnits)
+    :frameWidthInCharacters(frameWidthInCharacters), verticalFramePaddingInCharacters(framePaddingInUnits), 
+    horizontalFramePaddingInCharacters(framePaddingInUnits * 2)
 {
 }
 
@@ -13,7 +19,7 @@ std::string UserInterface::getDisplay()
     finalDisplay.append(std::string(frameWidthInCharacters + 4, '/') + '\n');
 
     // Upper padding
-    for (int i = 0; i < framePaddingInCharacters; i++)
+    for (int i = 0; i < verticalFramePaddingInCharacters; i++)
         finalDisplay.append("//" + std::string(frameWidthInCharacters, ' ') + "//\n");
 
     // Content
@@ -22,12 +28,14 @@ std::string UserInterface::getDisplay()
     {
         // Grab the corresponding format function based on the specified alignment
         FormatFunction f = alignmentTypeToAlignmentFunction[displayLine.alignment];
-        std::string formattedLine = (this->*f)(displayLine.content, frameWidthInCharacters - 2 * framePaddingInCharacters);
-        finalDisplay.append("//" + std::string(framePaddingInCharacters, ' ') + formattedLine + std::string(framePaddingInCharacters, ' ') + "//\n");
+        std::string formattedLine = (this->*f)(displayLine.content, frameWidthInCharacters - 2 * horizontalFramePaddingInCharacters);
+
+        // Construct and add a row of the UI (including border)
+        finalDisplay.append("//" + std::string(horizontalFramePaddingInCharacters, ' ') + formattedLine + std::string(horizontalFramePaddingInCharacters, ' ') + "//\n");
     }
 
     // Lower padding
-    for (int i = 0; i < framePaddingInCharacters; i++)
+    for (int i = 0; i < verticalFramePaddingInCharacters; i++)
         finalDisplay.append("//" + std::string(frameWidthInCharacters, ' ') + "//\n");
 
     // Lower border
@@ -46,7 +54,32 @@ std::string UserInterface::getFormattedLineLeftAlign(const std::string& line, in
 
 std::string UserInterface::getFormattedLineCenterAlign(const std::string& line, int maximumCharactersAllowed)
 {
-    return std::string();
+    std::string formattedLine = std::string(maximumCharactersAllowed, ' ');
+    // Case 1: Line has fewer characters than maximum
+    if (line.size() <= maximumCharactersAllowed)
+    {
+        // Initialize at location on formatted line where content should start
+        int formattedLineIndex = (maximumCharactersAllowed / 2) - (line.size() / 2);
+
+        // Fill in the formatted line
+        for (char c : line)
+        {
+            formattedLine[formattedLineIndex] = c;
+            formattedLineIndex++;
+        }
+    }
+    else
+    {
+        int lineIndex = (line.size() / 2) - (maximumCharactersAllowed / 2);
+
+        // Fill in the formatted line
+        for (int i = 0; i < maximumCharactersAllowed; i++)
+        {
+            // This is guaranteed to always be in range since maxCharsAllowed + lineIndex < line.size()
+            formattedLine[i] = line[i + lineIndex];
+        }
+    }
+    return formattedLine;
 }
 
 std::string UserInterface::getFormattedLineRightAlign(const std::string& line, int maximumCharactersAllowed)
