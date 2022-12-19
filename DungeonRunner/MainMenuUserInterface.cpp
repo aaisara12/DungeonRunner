@@ -1,7 +1,7 @@
 #include "MainMenuUserInterface.h"
 
 MainMenuUserInterface::MainMenuUserInterface( std::string title)
-    :UserInterface(50, 2)
+    :UserInterface(30, 1)
 {
     currentDisplay.push_back(DisplayLine(title, CENTER));
 }

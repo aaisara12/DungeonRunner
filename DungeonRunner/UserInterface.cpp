@@ -6,9 +6,11 @@
 // that of the vertical frame padding since the vertical height of one character
 // is about twice its width.
 UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInUnits)
-    :frameWidthInCharacters(frameWidthInCharacters), verticalFramePaddingInCharacters(framePaddingInUnits), 
+    :verticalFramePaddingInCharacters(framePaddingInUnits), 
     horizontalFramePaddingInCharacters(framePaddingInUnits * 2)
 {
+    // Prevent width from being too small to accommodate horizontal padding (left and right)
+    this->frameWidthInCharacters = std::max(frameWidthInCharacters, 2 * horizontalFramePaddingInCharacters);
 }
 
 std::string UserInterface::getDisplay()
@@ -70,13 +72,11 @@ std::string UserInterface::getFormattedLineCenterAlign(const std::string& line, 
     }
     else
     {
-        int lineIndex = (line.size() / 2) - (maximumCharactersAllowed / 2);
-
         // Fill in the formatted line
         for (int i = 0; i < maximumCharactersAllowed; i++)
         {
             // This is guaranteed to always be in range since maxCharsAllowed + lineIndex < line.size()
-            formattedLine[i] = line[i + lineIndex];
+            formattedLine[i] = line[i];
         }
     }
     return formattedLine;
