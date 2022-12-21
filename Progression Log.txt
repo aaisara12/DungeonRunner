@@ -37,7 +37,26 @@ arose as a result of a previous question are nested within the question.
 		- Easier to swap between conceptually different
 		  parts of the program (such as start screen and
 		  actual battle potion)
-	C> Process variable (CURRENTLY IMPLEMENTING)
+	C> Process variable
 		- Simpler, no need to run multiple processes
 		- Still easy to swap between diff parts of the program
 	* How do you transition from one active process to another?
+
+* How do I animate the UI to make the game more lively?
+	A: Make base UI class inherit from process and place UI into
+ 	   list of processes along with active process instead of separate
+	   list of UI
+	B> Add virtual tick function to base UI class and just add call it
+	   every frame (CURRENTLY IMPLEMENTING)
+		- Keeps code clearer about what's actively doing the work (process)
+		  and what's simply displaying the work (user interfaces) and
+		  easier to understand/debug
+	* How can we prevent input requests from interrupting UI animations?
+		A: Refresh input text every frame in addition to UI?
+		B> Write method to queue up an input request that will be
+		   queried as soon as all animations are finished. Check
+		   state of UI animation perhaps through return value of
+		   getDisplay() function
+			- The simpler of the options
+			- Not wasteful, since calling getDisplay() anyways
+		   
