@@ -49,17 +49,23 @@ std::string UserInterface::getDisplay()
 std::string UserInterface::getFormattedLineLeftAlign(const std::string& line, int maximumCharactersAllowed)
 {
     if (line.size() > maximumCharactersAllowed)
-        return line.substr(maximumCharactersAllowed);
+        return line.substr(0, maximumCharactersAllowed);
     else
         return line + std::string(maximumCharactersAllowed - line.size(), ' ');
 }
 
+
+// DESIGN CHOICE: Why not extract out if(line.size() > maximumCharactersAllowed) return ... into
+// a check before calling one of these functions? I wanted these functions to be self-contained
+// so that the caller doesn't have to worry about needing to check.
 std::string UserInterface::getFormattedLineCenterAlign(const std::string& line, int maximumCharactersAllowed)
 {
-    std::string formattedLine = std::string(maximumCharactersAllowed, ' ');
-    // Case 1: Line has fewer characters than maximum
-    if (line.size() <= maximumCharactersAllowed)
+    if (line.size() > maximumCharactersAllowed)
+        return line.substr(0, maximumCharactersAllowed);
+    else
     {
+        std::string formattedLine = std::string(maximumCharactersAllowed, ' ');
+
         // Initialize at location on formatted line where content should start
         int formattedLineIndex = (maximumCharactersAllowed / 2) - (line.size() / 2);
 
@@ -69,22 +75,17 @@ std::string UserInterface::getFormattedLineCenterAlign(const std::string& line, 
             formattedLine[formattedLineIndex] = c;
             formattedLineIndex++;
         }
+
+        return formattedLine;
     }
-    else
-    {
-        // Fill in the formatted line
-        for (int i = 0; i < maximumCharactersAllowed; i++)
-        {
-            // This is guaranteed to always be in range since maxCharsAllowed + lineIndex < line.size()
-            formattedLine[i] = line[i];
-        }
-    }
-    return formattedLine;
 }
 
 std::string UserInterface::getFormattedLineRightAlign(const std::string& line, int maximumCharactersAllowed)
 {
-    return std::string();
+    if (line.size() > maximumCharactersAllowed)
+        return line.substr(0, maximumCharactersAllowed);
+    else
+        return std::string(maximumCharactersAllowed - line.size(), ' ') + line;
 }
 
 UserInterface::AlignmentToFunctionMap UserInterface::alignmentTypeToAlignmentFunction =

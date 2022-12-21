@@ -1,0 +1,43 @@
+Dungeon Runner Problem Progression:
+
+This is a story of this project up until today in the form of
+a sequential list of questions representing the major challenges
+I've come across in developing this project. Hopefully it provides
+some insight into why I designed the project as it stands now.
+The options I considered (in order) for resolving each question is labeled
+with a letter A, B, C, ..., and the option I selected is followed
+by a > character with justification bullets below. Questions that
+arose as a result of a previous question are nested within the question.
+
+
+* What are the mechanics of the game?
+	A> See GDD
+		- Simplicity is key to finishing something
+
+* How do I display the game?
+	A> ASCII graphics
+	* How do I make the display extensible?
+		A> Modular UI Objects
+		* How does the game update the UI?
+			A: Direct function call
+			B> Event-listener pattern
+				- More complex
+				- Reduce pollution in other classes
+
+	* How do I keep UI style consistent?
+		A: Manually type out each UI's layout 
+		B> Auto-styling based on specification variables
+			- More complex
+			- Easier to style/change UI in the long run
+
+* How do I run the main game loop?
+	A: Single hard-coded loop for game
+	B: Process list
+		- More complex
+		- Easier to swap between conceptually different
+		  parts of the program (such as start screen and
+		  actual battle potion)
+	C> Process variable (CURRENTLY IMPLEMENTING)
+		- Simpler, no need to run multiple processes
+		- Still easy to swap between diff parts of the program
+	* How do you transition from one active process to another?
