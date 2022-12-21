@@ -10,7 +10,7 @@
 #include <Windows.h>
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
-	: characters(characters), inputReader(inputReader)
+	: characters(characters), inputReader(inputReader), activeProcess(nullptr), activeUserInterfaces(nullptr)
 {
 }
 
@@ -37,59 +37,67 @@ void GameManager::start()
 	// 3. Implement basic UI to go with the battle process (just the health bar)
 
 	// Add the start up process
-	addProcess(new MenuProcess(inputReader, *this), new std::list<UserInterface*>{new MainMenuUserInterface("DUNGEON RUNNER")});
+	setActiveProcess(new MenuProcess(inputReader, *this), new std::list<UserInterface*>{new MainMenuUserInterface("DUNGEON RUNNER")});
 
 	clock_t timeOfLastFrame = clock();
 
 	// Keep looping while there are still processes being run
-	while (activeProcesses.size() > 0)
+	while (activeProcess != nullptr)
 	{
 		// Update delta time for this frame
 		float deltaTime = float(clock() - timeOfLastFrame) / CLOCKS_PER_SEC;
 		timeOfLastFrame = clock();
 
 		// Apply update for current frame
-		for (std::list<Process*>::iterator processIterator = activeProcesses.begin(); processIterator != activeProcesses.end();)
-		{
-			Process* process = (*processIterator);
 			
-			// Display visuals for each process
-			clear_screen();
-			for (UserInterface* ui : *processToUserInterfaces[process])
-				std::cout << ui->getDisplay() << std::endl;
+		// Display visuals for each process
+		clear_screen();
+		for (UserInterface* ui : *activeUserInterfaces)
+			std::cout << ui->getDisplay() << std::endl;
 
-			// Run the update for each process
-			// DESIGN CHOICE: Run tick after UI display so that menu UI displays immediately
-			// upon start up. While this choice was made just to resolve a specific case,
-			// there aren't any drawbacks to this order as far as I can tell.
-			process->tick(deltaTime);
+		// Run the update for each process
+		// DESIGN CHOICE: Run tick after UI display so that menu UI displays immediately
+		// upon start up. While this choice was made just to resolve a specific case,
+		// there aren't any drawbacks to this order as far as I can tell.
+		activeProcess->tick(deltaTime);
 
-			// Clean up process and associated UI once it's finished
-			if (process->isFinished())
-			{
-				for (UserInterface* ui : *processToUserInterfaces[process])
-					delete ui;
-
-				delete processToUserInterfaces[process];
-
-				processToUserInterfaces.erase(process);
-
-				delete process;
-
-				processIterator = activeProcesses.erase(processIterator);
-			}
-			else
-				processIterator++;
+		// Clean up process and associated UI once it's finished
+		// DESIGN CHOICE: Completely free clean up active process data and UI once
+		// it's finished instead of simply "pausing" active process then swapping
+		// it out with the new one, never deallocating it until the entire program
+		// finishes. Processes won't be switched fast enough to be worth the
+		// additional complexity of this caching/pooling system for processes.
+		if (activeProcess->isFinished())
+		{
+			cleanUpActiveProcess();
 		}
 
 	}
 	
 }
 
-void GameManager::addProcess(Process* process, std::list<UserInterface*>* processUserInterfaces)
+void GameManager::setActiveProcess(Process* process, std::list<UserInterface*>* processUserInterfaces)
 {
-	activeProcesses.push_back(process);
-	processToUserInterfaces[process] = processUserInterfaces;
+	cleanUpActiveProcess();
+	activeProcess = process;
+	activeUserInterfaces = processUserInterfaces;
+}
+
+void GameManager::cleanUpActiveProcess()
+{
+	if (activeUserInterfaces != nullptr)
+	{
+		for (UserInterface* ui : *activeUserInterfaces)
+			delete ui;
+
+		delete activeUserInterfaces;
+	}
+	
+	if(activeProcess != nullptr)
+		delete activeProcess;
+
+	activeUserInterfaces = nullptr;
+	activeProcess = nullptr;
 }
 
 #if defined(_WIN32)

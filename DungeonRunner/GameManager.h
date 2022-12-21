@@ -15,12 +15,15 @@ public:
 
 	// Add a process to be managed by this Game Manager. The Game Manager will now be
 	// responsible for deallocating it and its user interfaces
-	void addProcess(Process* process, std::list<UserInterface*>* processUserInterfaces);
+	void setActiveProcess(Process* process, std::list<UserInterface*>* processUserInterfaces);
 
 private:
 	std::list<Character*> characters;
 	InputReader* inputReader;
 
-	std::list<Process*> activeProcesses;
-	std::unordered_map<Process*, std::list<UserInterface*>*> processToUserInterfaces;
+	Process* activeProcess;
+	std::list<UserInterface*>* activeUserInterfaces;
+
+	// Free all memory associated with the active process and its UI
+	void cleanUpActiveProcess();
 };
