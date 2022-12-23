@@ -140,32 +140,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BasicInputReader.h" />
-    <ClInclude Include="BattleProcess.h" />
+    <ClInclude Include="BattleGameState.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterLoader.h" />
     <ClInclude Include="DummyCharacterLoader.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="ExitGameState.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HealthBarUserInterface.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="InputReader.h" />
     <ClInclude Include="MainMenuUserInterface.h" />
-    <ClInclude Include="MenuProcess.h" />
+    <ClInclude Include="MenuGameState.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="Process.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicInputReader.cpp" />
-    <ClCompile Include="BattleProcess.cpp" />
+    <ClCompile Include="BattleGameState.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="DummyCharacterLoader.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HealthBarUserInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuUserInterface.cpp" />
-    <ClCompile Include="MenuProcess.cpp" />
+    <ClCompile Include="MenuGameState.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

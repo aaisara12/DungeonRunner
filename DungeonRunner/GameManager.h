@@ -2,7 +2,7 @@
 #include<list>
 #include "InputReader.h"
 #include "Character.h"
-#include "Process.h"
+#include "GameState.h"
 #include "UserInterface.h"
 
 class GameManager
@@ -13,16 +13,21 @@ public:
 	// Start the game
 	void start();
 
-	// Add a process to be managed by this Game Manager. The Game Manager will now be
-	// responsible for deallocating it and its user interfaces
-	void setActiveProcess(Process* process, std::list<UserInterface*>* processUserInterfaces);
-
 private:
+
 	std::list<Character*> characters;
 	InputReader* inputReader;
 
-	Process* activeProcess;
+	// Game States
+	GameState* currentState;
+	HubGameState* hubState;
+	GameState* exitState;
+	GameState* battleState;
+
 	std::list<UserInterface*>* activeUserInterfaces;
+	std::unordered_map<GameState*, std::list<UserInterface*>> userInterfaces;
+
+
 
 	// Free all memory associated with the active process and its UI
 	void cleanUpActiveProcess();

@@ -48,19 +48,22 @@
     <ClInclude Include="InputReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Process.h">
+    <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BasicInputReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuProcess.h">
+    <ClInclude Include="MenuGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MainMenuUserInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BattleProcess.h">
+    <ClInclude Include="BattleGameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,7 +86,7 @@
     <ClCompile Include="BasicInputReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MenuProcess.cpp">
+    <ClCompile Include="MenuGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UserInterface.cpp">
@@ -92,7 +95,7 @@
     <ClCompile Include="MainMenuUserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BattleProcess.cpp">
+    <ClCompile Include="BattleGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

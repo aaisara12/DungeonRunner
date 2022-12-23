@@ -4,14 +4,33 @@
 #include "GameManager.h"
 #include "UserInterface.h"
 #include "Character.h"
-#include "Process.h"
-#include "MenuProcess.h"
+#include "GameState.h"
+#include "MenuGameState.h"
+#include "BattleGameState.h"
+#include "ExitGameState.h"
 #include "MainMenuUserInterface.h"
 #include <Windows.h>
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
-	: characters(characters), inputReader(inputReader), activeProcess(nullptr), activeUserInterfaces(nullptr)
+	: characters(characters), inputReader(inputReader), currentState(nullptr), activeUserInterfaces(nullptr)
 {
+	exitState = new ExitGameState();
+	battleState = new BattleGameState((characters.size() == 0 ? nullptr : characters.front()), inputReader);
+
+	hubState = new MenuGameState(inputReader, std::unordered_map<char, GameState*>{
+		{'q', exitState},
+		{'p', battleState}
+	});
+
+	// Initialize the user interfaces
+	userInterfaces =
+	{
+		{hubState, std::list<UserInterface*> {new MainMenuUserInterface("DUNGEON RUNNER")}},
+		{battleState, std::list<UserInterface*> {}}
+	};
+
+	// Initialize start state
+	currentState = hubState;
 }
 
 
@@ -35,14 +54,11 @@ void GameManager::start()
 	// 1. Implement basic UI to go with the menu process (just like a diagram of your options)
 	// 2. Implement simple battle process (single character, deal damage every turn)
 	// 3. Implement basic UI to go with the battle process (just the health bar)
-
-	// Add the start up process
-	setActiveProcess(new MenuProcess(inputReader, *this), new std::list<UserInterface*>{new MainMenuUserInterface("DUNGEON RUNNER")});
-
+	
 	clock_t timeOfLastFrame = clock();
 
 	// Keep looping while there are still processes being run
-	while (activeProcess != nullptr)
+	while (currentState != exitState)
 	{
 		// Update delta time for this frame
 		float deltaTime = float(clock() - timeOfLastFrame) / CLOCKS_PER_SEC;
@@ -52,35 +68,31 @@ void GameManager::start()
 			
 		// Display visuals for each process
 		clear_screen();
-		for (UserInterface* ui : *activeUserInterfaces)
+		for (UserInterface* ui : userInterfaces[currentState])
 			std::cout << ui->getDisplay() << std::endl;
 
 		// Run the update for each process
 		// DESIGN CHOICE: Run tick after UI display so that menu UI displays immediately
 		// upon start up. While this choice was made just to resolve a specific case,
 		// there aren't any drawbacks to this order as far as I can tell.
-		activeProcess->tick(deltaTime);
+		currentState->tick(deltaTime);
 
-		// Clean up process and associated UI once it's finished
-		// DESIGN CHOICE: Completely free clean up active process data and UI once
-		// it's finished instead of simply "pausing" active process then swapping
-		// it out with the new one, never deallocating it until the entire program
-		// finishes. Processes won't be switched fast enough to be worth the
-		// additional complexity of this caching/pooling system for processes.
-		if (activeProcess->isFinished())
+		// Check for transitions
+		// DESIGN CHOICE: Hard-code all states to transition back to the hub state once they
+		// have finished (the only transition condition) and the hub state to transition to
+		// the state selcted by the user instead of using an explicit transition table.
+		// Due to the simplicity of the game structure, the overhead of a full-blown
+		// state machine with state transition tables was not worth it.
+		if (currentState->isFinished())
 		{
-			cleanUpActiveProcess();
-		}
+			GameState* nextState = currentState == hubState ? hubState->getSelectedState() : hubState;
 
+			currentState->onExit();
+			currentState = nextState;
+			currentState->onEnter();
+		}
 	}
 	
-}
-
-void GameManager::setActiveProcess(Process* process, std::list<UserInterface*>* processUserInterfaces)
-{
-	cleanUpActiveProcess();
-	activeProcess = process;
-	activeUserInterfaces = processUserInterfaces;
 }
 
 void GameManager::cleanUpActiveProcess()
@@ -93,11 +105,11 @@ void GameManager::cleanUpActiveProcess()
 		delete activeUserInterfaces;
 	}
 	
-	if(activeProcess != nullptr)
-		delete activeProcess;
+	if(currentState != nullptr)
+		delete currentState;
 
 	activeUserInterfaces = nullptr;
-	activeProcess = nullptr;
+	currentState = nullptr;
 }
 
 #if defined(_WIN32)
@@ -121,3 +133,4 @@ void clear_screen(char fill) {
 		SetConsoleCursorPosition(console, tl);
 	}
 }
+
