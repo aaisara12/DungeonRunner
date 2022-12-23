@@ -5,10 +5,7 @@
 class MenuGameState : public HubGameState
 {
 public:
-	MenuGameState(InputReader* inputReader, std::unordered_map<char, GameState*> gameStatesByCharacterRepresentation)
-		:inputReader(inputReader), gameStatesByCharacterRepresentation(gameStatesByCharacterRepresentation), 
-		_isFinished(false), selectedState(nullptr)
-	{}
+	MenuGameState(InputReader* inputReader, std::unordered_map<char, GameState*> gameStatesByCharacterRepresentation);
 
 	virtual void tick(float deltaTime) override;
 	virtual void onEnter() override;
@@ -20,6 +17,9 @@ public:
 private:
 	InputReader* inputReader;
 	std::unordered_map<char, GameState*> gameStatesByCharacterRepresentation;
+
+	std::string inputOptionsString;
+
 	bool _isFinished;
 	GameState* selectedState;
 };
