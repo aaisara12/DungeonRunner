@@ -41,16 +41,22 @@ arose as a result of a previous question are nested within the question.
 		- Simpler, no need to run multiple processes
 		- Still easy to swap between diff parts of the program
 	* How do you transition from one active process to another?
-	A: Have a process be responsible for instantiating the next
-	   process and pass it to the GameManager
-	B: Use a simple state machine transition model
-		- Processes don't need to know about each other
-		- Processes aren't coupled with each other or the GameManager
-		- Don't need to allocate/deallocate memory as frequently
-		- More complex to implement and may be overkill (was)
-	C> State machine with hard-coded transitions
-		- Don't need complex transition logic
-		- Only a few transitions needed, so not too much work
+		A: Have a process be responsible for instantiating the next
+	   	process and pass it to the GameManager
+		B: Use a simple state machine transition model
+			- Processes don't need to know about each other
+			- Processes aren't coupled with each other or the GameManager
+			- Don't need to allocate/deallocate memory as frequently
+			- More complex to implement and may be overkill (was)
+		C> State machine with hard-coded transitions
+			- Don't need complex transition logic
+			- Only a few transitions needed, so not too much work
+
+* How do I implement the main battle portion? Realtime delays?
+	A: Queue up actions to perform in order. Each action has a
+	   specified amount of time to delay before being popped.
+	   Actions can add more actions to the queue or clear it.
+		- Easy to insert delays of variable length
 
 * How do I animate the UI to make the game more lively?
 	A: Make base UI class inherit from process and place UI into

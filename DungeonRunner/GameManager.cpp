@@ -50,10 +50,35 @@ void GameManager::start()
 	// ultimately causing the game to terminate
 	
 	// TODO:
-	// 0. Implement base functionality for UI framing
-	// 1. Implement basic UI to go with the menu process (just like a diagram of your options)
-	// 2. Implement simple battle process (single character, deal damage every turn)
-	// 3. Implement basic UI to go with the battle process (just the health bar)
+	// 1. Implement simple battle process (single character, deal damage every turn)
+	//	  a.) "[CharacterName] appeared!" (1 sec)
+	//	  b.) "a - Attack"
+	//	  c.) "What would you like to do? [a]"
+	//    d.) "Hero slashed and dealt X dmg!" (deal damage to enemy then wait 2 sec)
+	//	  e.) Go back to b.)
+	//	  f.) "[CharacterName] has been defeated!" (wait 2 sec)
+	//	  g.) Set isFinished = true
+	// 
+	//	  NOTES: I assume we may need some methods to help abstract out some of the
+	//	  time/wait logic. We must define in a data structure or something the order
+	//	  of events like: 1. Ask for input 2. Apply damage calculations.
+	//	  It almost seems like we need a queue. Why? Because as soon as we get the
+	//	  player input, we know the sequence of events we would like to happen, so
+	//	  that's when we queue them up. And every tick we subtract time remaining from
+	//	  whatever's currently in the queue, and when it's run out of time, we simply
+	//	  pop it from the queue and move on to the next item. Once all items are gone,
+	//	  we ask for user input again to know what items to shove into the queue.
+	//	  These items can essentially be functors with an additional time variable tied
+	//	  to them.
+	//	  Certain events like the player dying might instantly clear the queue and put in
+	//	  some new items to lead the player back to the home screen and display the right
+	//	  dialogue.
+	//	  Another thing is that perhaps displaying dialogue is a functor! and we just shove
+	//	  those in after or before we do a certain computation. For example, we can 
+	//	  queue up the dialogue to say that the player slashes, and then queue the damage calc
+	//	  so that the damage goes off after the player reads, and from there we can decide
+	//	  whether to clear the queue and put in more items.
+	// 2. Implement basic UI to go with the battle process (just the health bar)
 	
 	clock_t timeOfLastFrame = clock();
 
