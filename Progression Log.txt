@@ -53,10 +53,16 @@ arose as a result of a previous question are nested within the question.
 			- Only a few transitions needed, so not too much work
 
 * How do I implement the main battle portion? Realtime delays?
-	A: Queue up actions to perform in order. Each action has a
+	A> Queue up actions to perform in order. Each action has a
 	   specified amount of time to delay before being popped.
-	   Actions can add more actions to the queue or clear it.
 		- Easy to insert delays of variable length
+	* How do I make the battle system dynamic so that different
+	  actions happen based on the results of executing previous actions?
+		A> Give actions ability to spawn new actions at front or
+		   back of queue (essentially use both stack and queue)
+			- Allows actions to spawn children and resolve them first
+			  before continuing on (almost like a DFS) to others
+		* How do I enable actions to spawn more actions in a safe way?
 
 * How do I animate the UI to make the game more lively?
 	A: Make base UI class inherit from process and place UI into

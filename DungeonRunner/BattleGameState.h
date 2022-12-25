@@ -2,7 +2,10 @@
 #include "GameState.h"
 #include "Character.h"
 #include "InputReader.h"
+#include <queue>
+#include "Command.h"
 
+class Command;
 class BattleGameState : public GameState
 {
 public:
@@ -21,6 +24,8 @@ private:
 	Character* boss;
 	InputReader* inputReader;
 	std::string currentBattleText;
+
+	std::queue<DelayedCommand> queuedBattleCommands;
 
 	bool _isFinished;
 };

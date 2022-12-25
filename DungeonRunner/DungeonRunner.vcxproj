@@ -143,6 +143,7 @@
     <ClInclude Include="BattleGameState.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterLoader.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="DummyCharacterLoader.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="ExitGameState.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="SetValueCommand.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
