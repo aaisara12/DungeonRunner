@@ -32,6 +32,9 @@ void BattleGameState::tick(float deltaTime)
             queuedBattleCommands.pop_front();
             command->Execute(battleSystem);
 
+            // TODO: Implement commands returning commands
+            // TODO: Implement evaluate input command or logic (need to decide which)
+
         }
     }
     else

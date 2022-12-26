@@ -26,7 +26,9 @@ public:
 	inline std::string getName() const { return name; }
 
 	// Modifiers
-	void takeDamage(int dmg);
+
+	// Attempt to deal dmg damage to the character. Return how much damage the character actually took
+	int takeDamage(int dmg);
 
 private:
 	std::unordered_map<StatType, int> stats;
@@ -41,6 +43,10 @@ private:
 // Container-based values are those that start at 0 and cap at some value
 struct ContainerUpdateEventData
 {
-	uint32_t newContainerMax;
-	uint32_t newContainerCurrent;
+	int newContainerMax;
+	int newContainerCurrent;
+
+	ContainerUpdateEventData(int newContainerCurrent, int newContainerMax)
+		: newContainerCurrent(newContainerCurrent), newContainerMax(newContainerMax)
+	{}
 };

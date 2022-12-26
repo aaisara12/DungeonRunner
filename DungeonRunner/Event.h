@@ -11,7 +11,7 @@ public:
 	// This is public since we're going to treat Subjects in this case
 	// more like events that can be instantiated multiple times for
 	// a particular user
-	void Invoke();
+	void Invoke(EventData eventData);
 
 	
 

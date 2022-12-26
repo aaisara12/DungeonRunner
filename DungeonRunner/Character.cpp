@@ -24,7 +24,16 @@ Character::Character(std::string name, std::unordered_map<StatType, int> stats, 
 	};
 }
 
-void Character::takeDamage(int dmg)
+int Character::takeDamage(int dmg)
 {
-	// TODO
+	int postMitigationDamage = dmg - stats[StatType::DEF];
+	if (postMitigationDamage < 0)
+		postMitigationDamage = 0;
+
+	stats[StatType::CUR_HP] -= postMitigationDamage;
+
+	// Let listeners know this character's HP has changed
+	healthDataChangedEvent.Invoke(ContainerUpdateEventData(stats[StatType::CUR_HP], stats[StatType::MAX_HP]));
+
+	return postMitigationDamage;
 }
