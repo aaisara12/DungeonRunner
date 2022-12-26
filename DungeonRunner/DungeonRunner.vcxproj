@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClInclude Include="BasicInputReader.h" />
     <ClInclude Include="BattleGameState.h" />
+    <ClInclude Include="BattleMove.h" />
+    <ClInclude Include="BattleSystem.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterLoader.h" />
     <ClInclude Include="Command.h" />
