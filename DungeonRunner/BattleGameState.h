@@ -4,7 +4,7 @@
 #include "InputReader.h"
 #include <list>
 #include "Command.h"
-#include "BattleSystem.h"
+#include "ObservableVariable.h"
 
 class Command;
 class BattleGameState : public GameState
@@ -17,8 +17,6 @@ public:
 	// to test input creation and can assume it works for its own tests.
 	// This way, input creation logic does not need to clutter this process's code.
 	BattleGameState(std::list<Character*> characters, Character* boss, InputReader* inputReader);
-
-	~BattleGameState();
 
 	virtual void tick(float deltaTime) override;
 
@@ -36,9 +34,20 @@ private:
 	// application of battle actions and how it affects the state of the battle,
 	// and the BattleGameState knows everything related to when these battle
 	// actions should be performed.
-	BattleSystem* battleSystem;
+	//BattleSystem* battleSystem;
+
+
 
 	InputReader* inputReader;
+
+	// Text describing what's going on in the battle (used by UI)
+	ObservableVariable<std::string> currentBattleText;
+
+	// List of all characters in game, including boss
+	std::list<Character*> characters;
+
+	// Boss character
+	Character* boss;
 
 	// Queue of current actions to happen in the battle
 	std::list<DelayedCommand> queuedBattleCommands;

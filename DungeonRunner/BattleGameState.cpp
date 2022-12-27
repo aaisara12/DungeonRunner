@@ -8,15 +8,8 @@
 // This way, input creation logic does not need to clutter this process's code.
 
 BattleGameState::BattleGameState(std::list<Character*> characters, Character* boss, InputReader* inputReader)
-    : inputReader(inputReader), _isFinished(false)
-{
-    battleSystem = new BattleSystem(characters, boss); 
-}
-
-BattleGameState::~BattleGameState()
-{
-    delete battleSystem;
-}
+    : inputReader(inputReader), characters(characters), boss(boss), _isFinished(false)
+{}
 
 void BattleGameState::tick(float deltaTime)
 {
@@ -30,11 +23,23 @@ void BattleGameState::tick(float deltaTime)
             // add more commands to the front of the queue easily
             Command* command = queuedBattleCommands.front().command;
             queuedBattleCommands.pop_front();
-            command->Execute(battleSystem);
+            std::list<Command*> generatedCommands = command->Execute(currentBattleText);
+
+            // Push all generated commands onto command queue (it's recursive, so go straight to the front)
+            // with delay that scales based on time it takes to read the current text
+            for (Command* command : generatedCommands)
+            {
+                // TODO: Link this up with the actual display speed of the UI?
+                const float estimatedReadingSpeedCharsPerSecond = 10;
+                queuedBattleCommands.push_front(DelayedCommand(currentBattleText.get().size()/estimatedReadingSpeedCharsPerSecond, command));
+            }
+
+            //queuedBattleCommands.insert(queuedBattleCommands.begin(), generatedCommands.begin(), generatedCommands.end());
 
             // TODO: Implement commands returning commands
             // TODO: Implement evaluate input command or logic (need to decide which)
 
+            delete command;
         }
     }
     else

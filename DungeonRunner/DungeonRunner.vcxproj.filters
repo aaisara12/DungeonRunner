@@ -72,10 +72,19 @@
     <ClInclude Include="SetValueCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BattleSystem.h">
+    <ClInclude Include="BattleMove.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BattleMove.h">
+    <ClInclude Include="BattleInteraction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObservableVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplyBattleInteractionCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DescribeBattleInteractionCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,7 +119,7 @@
     <ClCompile Include="BattleGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BattleSystem.cpp">
+    <ClCompile Include="ApplyBattleInteractionCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

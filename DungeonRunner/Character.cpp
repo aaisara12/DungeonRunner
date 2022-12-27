@@ -1,7 +1,7 @@
 #include "Character.h"
 
 Character::Character(std::string name)
-	:name(name), voiceLines({})
+	:name(name)
 {
 	stats = std::unordered_map<StatType, int>
 	{
@@ -12,8 +12,8 @@ Character::Character(std::string name)
 	};
 }
 
-Character::Character(std::string name, std::unordered_map<StatType, int> stats, std::list<std::string> voiceLines)
-	:name(name), voiceLines(voiceLines)
+Character::Character(std::string name, std::unordered_map<StatType, int> stats)
+	:name(name)
 {
 	this->stats = std::unordered_map<StatType, int>
 	{
@@ -24,16 +24,8 @@ Character::Character(std::string name, std::unordered_map<StatType, int> stats, 
 	};
 }
 
-int Character::takeDamage(int dmg)
+std::list<BattleInteraction> Character::applyBattleInteraction(BattleInteraction battleInteraction)
 {
-	int postMitigationDamage = dmg - stats[StatType::DEF];
-	if (postMitigationDamage < 0)
-		postMitigationDamage = 0;
-
-	stats[StatType::CUR_HP] -= postMitigationDamage;
-
-	// Let listeners know this character's HP has changed
-	healthDataChangedEvent.Invoke(ContainerUpdateEventData(stats[StatType::CUR_HP], stats[StatType::MAX_HP]));
-
-	return postMitigationDamage;
+	// TODO
+	return std::list<BattleInteraction>();
 }
