@@ -63,19 +63,19 @@ arose as a result of a previous question are nested within the question.
 			- Allows actions to spawn children and resolve them first
 			  before continuing on (almost like a DFS) to others
 		* How do I enable actions to spawn more actions in a safe way?
-		A: Pass in a reference to the queue of commands
-		B: Make BattleGameState listen for events triggered by commands
-		   and add corresponding commands to queue
-			- Code will get complicated as we need to create several
-			  events and have the BattleGameState instance listen
-			- Level of indirection with commands triggering events
-			  and events triggering addition of commands that makes
-			  it difficult to wrap your head around which commands
-			  are spawning which
-		C: Have commands return list of commands it would like to add
-			- Commands don't need to know about queue at all or any
-			  external logic
-			- Direct link between commands and commands they spawn
+			A: Pass in a reference to the queue of commands
+			B: Make BattleGameState listen for events triggered by commands
+		   	and add corresponding commands to queue
+				- Code will get complicated as we need to create several
+			  	  events and have the BattleGameState instance listen
+				- Level of indirection with commands triggering events
+			  	  and events triggering addition of commands that makes
+			  	  it difficult to wrap your head around which commands
+			  	  are spawning which
+			C> Have commands return list of commands it would like to add
+				- Commands don't need to know about queue at all or any
+			  	  external logic
+				- Direct link between commands and commands they spawn
 
 * How do I animate the UI to make the game more lively?
 	A: Make base UI class inherit from process and place UI into
