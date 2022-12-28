@@ -5,6 +5,7 @@
 #include "Event.h"
 #include "BattleMove.h"
 #include "BattleInteraction.h"
+#include "BattleOutcomeData.h"
 
 struct ContainerUpdateEventData;
 class Character
@@ -15,7 +16,8 @@ public:
 		MAX_HP,
 		CUR_HP,
 		ATK,
-		DEF
+		DEF,
+		HEAL
 	};
 
 	Character(std::string name);
@@ -34,7 +36,7 @@ public:
 
 	// Apply the provided battle interaction to this character (source should be this character)
 	// and return back any battle interactions it generates
-	std::list<BattleInteraction> applyBattleInteraction(BattleInteraction battleInteraction);
+	BattleOutcomeData applyBattleInteraction(BattleInteraction battleInteraction);
 
 private:
 	std::string name;
@@ -50,6 +52,12 @@ private:
 	
 	// Event invoked when this character's health information is changed
 	Event<ContainerUpdateEventData> healthDataChangedEvent;
+
+	// Function for determining how much damage a defender should take
+	int computeRealDamage(int attackPower, int defendPower, int rawDamage);
+
+	// Function for determining how much a target should heal for
+	int computeHeal(int healPower, int rawHeal);
 };
 
 // Data structure for holding information about an updated container-based value

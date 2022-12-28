@@ -8,29 +8,25 @@ std::list<Command*> ApplyBattleInteractionCommand::Execute(ObservableVariable<st
 	std::string outcomeText;
 	std::list<Command*> generatedCommands;
 
-	BattleMove* selectedMove = battleInteraction.move;
+	BattleOutcomeData outcome = battleInteraction.target->applyBattleInteraction(battleInteraction);
 
-	srand(time(NULL));
-	int randomHitNumber = rand() % 100;
-	int hitNumberThreshold = static_cast<int>(selectedMove->accuracy * 100);
-	if (randomHitNumber <= hitNumberThreshold)
+	// DESIGN CHOICE: Loop through const ref instead of copy constructing new BattleInteraction
+	// to save on amount of copying
+	for (const BattleInteraction& interaction : outcome.generatedInteractions)
 	{
-		std::list<BattleInteraction> generatedInteractions = battleInteraction.target->applyBattleInteraction(battleInteraction);
+		generatedCommands.push_back(new DescribeBattleInteractionCommand(interaction));
+		generatedCommands.push_back(new ApplyBattleInteractionCommand(interaction));
+	}
 
-		// TODO: Design a less expensive solution to generating new commands
-		for (BattleInteraction interaction : generatedInteractions)
-		{
-			generatedCommands.push_back(new DescribeBattleInteractionCommand(interaction));
-			generatedCommands.push_back(new ApplyBattleInteractionCommand(interaction));
-		}
-
-		// TODO: Design way to get information about the damage dealt after def calculations
-		int realDamage = battleInteraction.move->damage;
-
-		outcomeText = battleInteraction.target->getName() + " takes " + std::to_string(realDamage) + " damage!";
+	if (outcome.isHit)
+	{
+		if (outcome.damageTaken > 0)
+			outcomeText = battleInteraction.target->getName() + " was hit for " + std::to_string(outcome.damageTaken) + " damage!";
+		else if (outcome.healingReceived > 0)
+			outcomeText = battleInteraction.target->getName() + " healed for " + std::to_string(outcome.healingReceived) + " points!";
 	}
 	else
-		outcomeText = battleInteraction.source->getName() + " misses!";
+		outcomeText = battleInteraction.source->getName() + " missed!";
 
 	textOutput.set(outcomeText);
     return generatedCommands;
