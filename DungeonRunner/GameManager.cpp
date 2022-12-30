@@ -9,6 +9,7 @@
 #include "BattleGameState.h"
 #include "ExitGameState.h"
 #include "MainMenuUserInterface.h"
+#include "MenuUserInterface.h"
 #include <Windows.h>
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
@@ -22,7 +23,7 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	// Initialize the user interfaces
 	userInterfaces =
 	{
-		{hubState, std::list<UserInterface*> {new MainMenuUserInterface("DUNGEON RUNNER")}},
+		{hubState, std::list<UserInterface*> {new MainMenuUserInterface("DUNGEON RUNNER"), new MenuUserInterface(inputReader)}},
 		{battleState, std::list<UserInterface*> {}}
 	};
 
@@ -36,6 +37,10 @@ void clear_screen(char fill = ' ');
 void GameManager::start()
 {
 	std::cout << "Game start!" << std::endl;
+
+	// Run initial frame of UI
+	for (UserInterface* ui : userInterfaces[currentState])
+		std::cout << ui->getDisplay() << std::endl;
 
 	// GOAL 1: Create a basic vertical slice where
 	// the UI displays the health bar of the first
@@ -90,14 +95,20 @@ void GameManager::start()
 			
 		// Display visuals for each process
 		clear_screen();
-		for (UserInterface* ui : userInterfaces[currentState])
-			std::cout << ui->getDisplay() << std::endl;
 
 		// Run the update for each process
-		// DESIGN CHOICE: Run tick after UI display so that menu UI displays immediately
-		// upon start up. While this choice was made just to resolve a specific case,
-		// there aren't any drawbacks to this order as far as I can tell.
 		currentState->tick(deltaTime);
+
+		// TODO: Resolve issue where input is requested and
+		// triggers UI update, but UI doesn't display immediately
+		// because input holds up the thread.
+		// Perhaps we can do something where input doesn't activate
+		// until the end of the frame (like we raise some flag that
+		// says that input was requested). We could also use this
+		// feature to tell the clock to make sure to reset the delta time
+		// for the frame after the input event
+		for (UserInterface* ui : userInterfaces[currentState])
+			std::cout << ui->getDisplay() << std::endl;
 
 		// Check for transitions
 		// DESIGN CHOICE: Hard-code all states to transition back to the hub state once they

@@ -6,10 +6,12 @@
 class MenuUserInterface : public UserInterface, public Observer<InputEventData>
 {
 public:
-	MenuUserInterface(InputReader& inputReader);
+	MenuUserInterface(InputReader* inputReader);
 	virtual ~MenuUserInterface() override;
 
+	virtual void onNotify(InputEventData eventData) override;
+
 private:
-	InputReader& inputReader;
+	InputReader* inputReader;
 
 };
