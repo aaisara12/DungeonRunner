@@ -1,22 +1,27 @@
 #include "MenuGameState.h"
 
-MenuGameState::MenuGameState(InputReader* inputReader, std::unordered_map<char, GameState*> gameStatesByCharacterRepresentation)
-	:inputReader(inputReader), gameStatesByCharacterRepresentation(gameStatesByCharacterRepresentation),
-	_isFinished(false), selectedState(nullptr), inputOptionsString("")
+MenuGameState::MenuGameState(InputReader* inputReader, std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions)
+	:inputReader(inputReader), _isFinished(false), selectedState(nullptr)
 {
-	for (auto pair : gameStatesByCharacterRepresentation)
+	// DESIGN CHOICE: Pass in a pair of GameState* and string to ensure gameStates and gameStateDescriptions
+	// have corresponding elements at the same index, which is important for the options selection part
+	for (const std::pair<GameState*, std::string>& stateDescriptionPair : gameStatesAndDescriptions)
 	{
-		inputOptionsString.push_back(pair.first);
+		gameStates.push_back(stateDescriptionPair.first);
+		gameStateDescriptions.push_back(stateDescriptionPair.second);
 	}
 }
 
 void MenuGameState::tick(float deltaTime)
 {
-    char response = inputReader->getInput("What would you like to do?", inputOptionsString);
-	if (gameStatesByCharacterRepresentation.count(response) == 0)
-		selectedState = this;
+	// Here we assume that the descriptions are in the exact same order as their
+	// correpsonding states in gameStates
+
+    uint8_t response = inputReader->requestInput("What would you like to do?", gameStateDescriptions);
+	if (response >= gameStates.size())
+		selectedState = this;			// Default go back to this state
 	else
-		selectedState = gameStatesByCharacterRepresentation[response];
+		selectedState = gameStates[response];
 
 	_isFinished = true;
 }

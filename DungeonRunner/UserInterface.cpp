@@ -24,8 +24,7 @@ std::string UserInterface::getDisplay()
     for (int i = 0; i < verticalFramePaddingInCharacters; i++)
         finalDisplay.append("//" + std::string(frameWidthInCharacters, ' ') + "//\n");
 
-    // Content
-    const std::vector<DisplayLine>& displayLines = display();
+    // Content 
     for (DisplayLine displayLine : displayLines)
     {
         // Grab the corresponding format function based on the specified alignment

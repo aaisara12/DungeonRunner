@@ -1,18 +1,13 @@
 #include "BasicInputReader.h"
 
-char BasicInputReader::getInput(std::string query, std::string inputOptions)
+uint8_t BasicInputReader::getInput(std::string query, std::vector<std::string> optionDescriptions)
 {
-	std::string inputOptionsFormatted = "[";
-	for (char option : inputOptions)
-	{
-		inputOptionsFormatted.push_back(option);
-		inputOptionsFormatted.push_back('|');
-	}
-	inputOptionsFormatted[inputOptionsFormatted.size() - 1] = ']';
-
-	char ans;
-	std::cout << (query + " " + inputOptionsFormatted + ": ");
+	int ans;
+	std::cout << (query + ": ");
 	std::cin >> ans;
 
+	// TODO: Add some form of validation to make sure
+	// invalid input is handled in a defined way
+	// (Right now, can't be sure a valid digit was entered)
 	return ans;
 }

@@ -43,6 +43,13 @@ void BattleGameState::tick(float deltaTime)
         }
     }
     else
-        _isFinished = true;     // Nothing left to do
+    {
+        for (Character* character : characters)
+        {
+            // Query for the move of this character 
+            // Query for the desired target 
+        }
+
+    }
 }
 

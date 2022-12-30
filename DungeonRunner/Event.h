@@ -5,13 +5,25 @@ template <typename EventData>
 class Event
 {
 public:
-	void addListener(Observer<EventData>* observer);
-	void removeListener(Observer<EventData>* observer);
+	void addListener(Observer<EventData>* observer)
+	{
+		observers.push_back(observer);
+	}
+	void removeListener(Observer<EventData>* observer)
+	{
+		observers.remove(observer);
+	}
 
 	// This is public since we're going to treat Subjects in this case
 	// more like events that can be instantiated multiple times for
 	// a particular user
-	void Invoke(EventData eventData);
+	void Invoke(EventData eventData)
+	{
+		for (Observer<EventData>* observer : observers)
+		{
+			observer->onNotify(eventData);
+		}
+	}
 
 	
 
@@ -33,5 +45,5 @@ private:
 	// adding or removing elements is often more expensive since it involves
 	// shifting over large amounts of data in a particular direction (if not
 	// at the end).
-	std::list<Observer<EventData*>*> observers;
+	std::list<Observer<EventData>*> observers;
 };

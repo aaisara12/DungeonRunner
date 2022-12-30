@@ -157,6 +157,7 @@
     <ClInclude Include="InputReader.h" />
     <ClInclude Include="MainMenuUserInterface.h" />
     <ClInclude Include="MenuGameState.h" />
+    <ClInclude Include="MenuUserInterface.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="GameState.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuUserInterface.cpp" />
     <ClCompile Include="MenuGameState.cpp" />
+    <ClCompile Include="MenuUserInterface.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

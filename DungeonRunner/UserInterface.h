@@ -15,6 +15,7 @@ public:
 	};
 
 	UserInterface(int frameWidthInCharacters, int framePaddingInUnits);
+	inline virtual ~UserInterface() {}
 
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
@@ -41,7 +42,17 @@ protected:
 	// to have this fine-grain adjustment of the text on each line so that
 	// derived classes don't need to worry about making sure the content
 	// looks right on the screen.
-	virtual const std::vector<DisplayLine>& display() = 0;
+	//virtual const std::vector<DisplayLine>& display() = 0;
+
+	// The current UI display represented as lines of display formatting
+	// DESIGN CHOICE: Expose a protected data member that derived classes
+	// can modify directly instead of making derived classes instantiate
+	// their own vectors and copy them over through a member function.
+	// I made this switch to reduce the amount of copying required,
+	// given that the display function is called every frame. The derived
+	// class will only need to change the data member when something
+	// of interest happens, not every frame.
+	std::vector<DisplayLine> displayLines;
 
 private:
 

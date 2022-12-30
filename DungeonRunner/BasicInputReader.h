@@ -2,6 +2,6 @@
 #include "InputReader.h"
 class BasicInputReader : public InputReader
 {
-public:
-	virtual char getInput(std::string query, std::string inputOptions);
+protected:
+	virtual uint8_t getInput(std::string query, std::vector<std::string> optionDescriptions) override;
 };

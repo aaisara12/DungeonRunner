@@ -17,10 +17,7 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	exitState = new ExitGameState();
 	battleState = new BattleGameState(characters, (characters.size() == 0 ? nullptr : characters.front()), inputReader);
 
-	hubState = new MenuGameState(inputReader, std::unordered_map<char, GameState*>{
-		{'q', exitState},
-		{'p', battleState}
-	});
+	hubState = new MenuGameState(inputReader, std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}});
 
 	// Initialize the user interfaces
 	userInterfaces =
