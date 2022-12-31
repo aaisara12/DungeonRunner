@@ -90,7 +90,10 @@
     <ClInclude Include="BattleOutcomeData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuUserInterface.h">
+    <ClInclude Include="InputOptionsUserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subscriber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -128,7 +131,7 @@
     <ClCompile Include="ApplyBattleInteractionCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MenuUserInterface.cpp">
+    <ClCompile Include="InputOptionsUserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

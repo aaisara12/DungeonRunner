@@ -5,7 +5,7 @@
 class MenuGameState : public HubGameState
 {
 public:
-	MenuGameState(InputReader* inputReader, std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions);
+	MenuGameState(GameManager* gameManager, std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions);
 
 	virtual void tick(float deltaTime) override;
 	virtual void onEnter() override;
@@ -15,7 +15,7 @@ public:
 	inline virtual GameState* getSelectedState() const override { return selectedState; };
 
 private:
-	InputReader* inputReader;
+	GameManager* gameManager;
 
 	std::vector<GameState*> gameStates;
 	std::vector<std::string> gameStateDescriptions;

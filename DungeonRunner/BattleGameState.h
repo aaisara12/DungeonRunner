@@ -6,6 +6,7 @@
 #include "Command.h"
 #include "ObservableVariable.h"
 
+class GameManager;
 class Command;
 class BattleGameState : public GameState
 {
@@ -16,7 +17,7 @@ public:
 	// ensure a proper input reading module; this module does not have
 	// to test input creation and can assume it works for its own tests.
 	// This way, input creation logic does not need to clutter this process's code.
-	BattleGameState(std::list<Character*> characters, Character* boss, InputReader* inputReader);
+	BattleGameState(std::list<Character*> characters, Character* boss, GameManager* gameManager);
 
 	virtual void tick(float deltaTime) override;
 
@@ -38,7 +39,7 @@ private:
 
 
 
-	InputReader* inputReader;
+	GameManager* gameManager;
 
 	// Text describing what's going on in the battle (used by UI)
 	ObservableVariable<std::string> currentBattleText;

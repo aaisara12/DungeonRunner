@@ -77,6 +77,20 @@ arose as a result of a previous question are nested within the question.
 			  	  external logic
 				- Direct link between commands and commands they spawn
 
+* How do I communicate information about the input state to the GameManager?
+	A: 2-phase input module with events that GM listens for
+		- Complicated to get input response information back from GM
+		  without coupling it to GM
+	B: Store input state in input module and use it to automatically
+	   divide input reading across two frames instead of one to enable
+	   the GameManager to register it in the first and make the
+	   corresponding adjustments in the second.
+		- Implicitly couples game state to GameManager implementation
+	C> Direct GM method call
+		- Much simpler to get intended behavior
+		- Can keep a single instance input user interface in GM
+		- GameManager becomes a dependency for game states that want input
+
 * How do I animate the UI to make the game more lively?
 	A: Make base UI class inherit from process and place UI into
  	   list of processes along with active process instead of separate

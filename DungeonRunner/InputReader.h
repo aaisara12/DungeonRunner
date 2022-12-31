@@ -16,20 +16,12 @@ struct InputEventData
 class InputReader
 {
 public:
+	// DESIGN CHOICE: Split InputReader into two parts: a request and a resolution. 
+	// A request represents defining the parameters for the input query, and
+	// a resolution represents actually pausing the thread to try to acquire input
+	// from the user. This split was made to enable greater control over input, as
+	// it can cause the program to pause in undefined/unwanted places.
 
-	// DESIGN CHOICE: Wrapper around unique input implementation to ensure event is invoked.
-	// Could have simply left it up to derived class to invoke, but this seemed prone to error.
-	inline uint8_t requestInput(std::string query, std::vector<std::string> optionDescriptions)
-	{
-		onInputRequestedEvent.Invoke(InputEventData(query, optionDescriptions));
-		return getInput(query, optionDescriptions);
-	}
+	virtual uint8_t requestInput(std::string query, std::vector<std::string> optionDescriptions) = 0;
 
-	inline Event<InputEventData>& getOnInputRequestedEvent() { return onInputRequestedEvent; }
-
-protected:
-	virtual uint8_t getInput(std::string query, std::vector<std::string> optionDescriptions) = 0;
-
-private:
-	Event<InputEventData> onInputRequestedEvent;
 };

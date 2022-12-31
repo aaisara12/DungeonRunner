@@ -1,6 +1,6 @@
 #include "BasicInputReader.h"
 
-uint8_t BasicInputReader::getInput(std::string query, std::vector<std::string> optionDescriptions)
+uint8_t BasicInputReader::requestInput(std::string query, std::vector<std::string> optionDescriptions)
 {
 	int ans;
 	std::cout << (query + ": ");

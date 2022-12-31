@@ -7,8 +7,8 @@
 // to test input creation and can assume it works for its own tests.
 // This way, input creation logic does not need to clutter this process's code.
 
-BattleGameState::BattleGameState(std::list<Character*> characters, Character* boss, InputReader* inputReader)
-    : inputReader(inputReader), characters(characters), boss(boss), _isFinished(false)
+BattleGameState::BattleGameState(std::list<Character*> characters, Character* boss, GameManager* gameManager)
+    : gameManager(gameManager), characters(characters), boss(boss), _isFinished(false)
 {}
 
 void BattleGameState::tick(float deltaTime)
