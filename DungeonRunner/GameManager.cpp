@@ -13,6 +13,8 @@
 #include "TextDisplayUserInterface.h"
 #include <Windows.h>
 
+#define MIN_TIME_STEP 0.08
+
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
 	: characters(characters), currentState(nullptr)
 {
@@ -104,6 +106,11 @@ void GameManager::start()
 	{
 		// Update delta time for this frame
 		float deltaTime = float(clock() - timeOfLastFrame) / CLOCKS_PER_SEC;
+
+		// Define a min time step so that window has time to refresh
+		if (deltaTime < MIN_TIME_STEP)
+			continue;
+
 		timeOfLastFrame = clock();
 
 		// Apply update for current frame

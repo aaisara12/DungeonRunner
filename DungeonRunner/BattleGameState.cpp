@@ -1,5 +1,7 @@
 #include "BattleGameState.h"
 #include "BattleMove.h"
+#include "ApplyBattleInteractionCommand.h"
+#include "DescribeBattleInteractionCommand.h"
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -55,6 +57,13 @@ void BattleGameState::tick(float deltaTime)
             Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
 
             // TODO: queue up a command based on this input
+            BattleInteraction interaction;
+            interaction.move = selectedMove;
+            interaction.source = character;
+            interaction.target = selectedTarget;
+
+            queuedBattleCommands.push_back(DelayedCommand(0.5f, new DescribeBattleInteractionCommand(interaction)));
+            queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction)));
         }
 
     }

@@ -11,7 +11,11 @@ class ObservableVariable
 {
 public:
 	inline T get() { return value; }
-	inline void set(T newValue) { value = newValue; }
+	inline void set(T newValue) 
+	{ 
+		value = newValue; 
+		onVariableChangedEvent.Invoke(value);
+	}
 	inline Event<T>& getOnVariableChangedEvent() { return onVariableChangedEvent; }
 
 private:

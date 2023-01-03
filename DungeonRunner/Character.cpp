@@ -26,6 +26,18 @@ Character::Character(std::string name, std::unordered_map<StatType, int> stats)
 	};
 }
 
+Character::Character(std::string name, std::vector<BattleMove*> moves)
+	:name(name), moves(moves)
+{
+	stats = std::unordered_map<StatType, int>
+	{
+		{StatType::MAX_HP, 10},
+		{StatType::CUR_HP, 10},
+		{StatType::ATK, 1},
+		{StatType::DEF, 0}
+	};
+}
+
 BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInteraction)
 {
 	BattleOutcomeData data;
@@ -66,10 +78,10 @@ BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInte
 
 int Character::computeRealDamage(int attackPower, int defendPower, int rawDamage)
 {
-	return std::max(attackPower - defendPower, 0) * rawDamage / 100;
+	return std::max(attackPower - defendPower, 0) * rawDamage;
 }
 
 int Character::computeHeal(int healPower, int rawHeal)
 {
-	return healPower * rawHeal / 100;
+	return healPower * rawHeal;
 }

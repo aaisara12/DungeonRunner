@@ -22,6 +22,8 @@ public:
 
 	Character(std::string name);
 	Character(std::string name, std::unordered_map<StatType, int> stats);
+	Character(std::string name, std::vector<BattleMove*> moves);
+
 	virtual ~Character() {};	// Calls derived class destructors
 
 	// Accessers

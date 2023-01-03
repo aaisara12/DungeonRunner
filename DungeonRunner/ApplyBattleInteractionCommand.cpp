@@ -24,6 +24,8 @@ std::list<Command*> ApplyBattleInteractionCommand::Execute(ObservableVariable<st
 			outcomeText = battleInteraction.target->getName() + " was hit for " + std::to_string(outcome.damageTaken) + " damage!";
 		else if (outcome.healingReceived > 0)
 			outcomeText = battleInteraction.target->getName() + " healed for " + std::to_string(outcome.healingReceived) + " points!";
+		else
+			outcomeText = "but nothing happened!";
 	}
 	else
 		outcomeText = battleInteraction.source->getName() + " missed!";
