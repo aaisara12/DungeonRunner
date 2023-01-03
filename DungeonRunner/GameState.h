@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <string>
 class GameState
 {
 public:
@@ -8,6 +9,8 @@ public:
 	virtual void onExit() {}
 
 	virtual bool isFinished() const = 0;
+
+	virtual std::string getName() const = 0;
 };
 
 // DESIGN CHOICE: A special GameState that has the ability to

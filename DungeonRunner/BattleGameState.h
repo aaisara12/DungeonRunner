@@ -1,12 +1,13 @@
 #pragma once
 #include "GameState.h"
+#include "GameManager.h"
 #include "Character.h"
 #include "InputReader.h"
 #include <list>
 #include "Command.h"
 #include "ObservableVariable.h"
+#include "OptionSelector.h"
 
-class GameManager;
 class Command;
 class BattleGameState : public GameState
 {
@@ -17,12 +18,13 @@ public:
 	// ensure a proper input reading module; this module does not have
 	// to test input creation and can assume it works for its own tests.
 	// This way, input creation logic does not need to clutter this process's code.
-	BattleGameState(std::list<Character*> characters, Character* boss, GameManager* gameManager);
+	BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector);
 
 	virtual void tick(float deltaTime) override;
 
 	inline virtual bool isFinished() const override { return _isFinished; }
 
+	inline virtual std::string getName() const override { return "Battle"; }
 
 private:
 
@@ -39,13 +41,15 @@ private:
 
 
 
-	GameManager* gameManager;
+	OptionSelector* optionSelector;
 
 	// Text describing what's going on in the battle (used by UI)
 	ObservableVariable<std::string> currentBattleText;
 
-	// List of all characters in game, including boss
-	std::list<Character*> characters;
+	// DESIGN CHOICE: Store characters in a vector since target selection 
+	// is by index, and set of characters likely won't change frequently,
+	// making a vector more optimal for this section
+	std::vector<Character*> characters;
 
 	// Boss character
 	Character* boss;

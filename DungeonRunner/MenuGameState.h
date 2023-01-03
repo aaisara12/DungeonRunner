@@ -2,10 +2,12 @@
 #include "GameState.h"
 #include "InputReader.h"
 #include "GameManager.h"
+#include "OptionSelector.h"
+
 class MenuGameState : public HubGameState
 {
 public:
-	MenuGameState(GameManager* gameManager, std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions);
+	MenuGameState(std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions, OptionSelector* optionSelector);
 
 	virtual void tick(float deltaTime) override;
 	virtual void onEnter() override;
@@ -14,8 +16,10 @@ public:
 	
 	inline virtual GameState* getSelectedState() const override { return selectedState; };
 
+	inline virtual std::string getName() const override { return "Main Menu"; }
+
 private:
-	GameManager* gameManager;
+	OptionSelector* optionSelector;
 
 	std::vector<GameState*> gameStates;
 	std::vector<std::string> gameStateDescriptions;

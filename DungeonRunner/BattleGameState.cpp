@@ -1,5 +1,5 @@
 #include "BattleGameState.h"
-
+#include "BattleMove.h"
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -7,8 +7,8 @@
 // to test input creation and can assume it works for its own tests.
 // This way, input creation logic does not need to clutter this process's code.
 
-BattleGameState::BattleGameState(std::list<Character*> characters, Character* boss, GameManager* gameManager)
-    : gameManager(gameManager), characters(characters), boss(boss), _isFinished(false)
+BattleGameState::BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector)
+    : optionSelector(optionSelector), characters(characters), boss(boss), _isFinished(false)
 {}
 
 void BattleGameState::tick(float deltaTime)
@@ -46,8 +46,19 @@ void BattleGameState::tick(float deltaTime)
     {
         for (Character* character : characters)
         {
+            // TODO: Cache moves list for every character and 
+            // character names list upon construction of this state!
+            // Or optionally implement some kind of base class that
+            // GameManager can take in a list of and return back the
+            // selected instance.
+            
             // Query for the move of this character 
-            // Query for the desired target 
+            BattleMove* selectedMove = optionSelector->queryOptions("Move Selection", character->getMoves());
+
+            // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
+            std::vector<Character*> validTargets = characters;
+
+            Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
         }
 
     }

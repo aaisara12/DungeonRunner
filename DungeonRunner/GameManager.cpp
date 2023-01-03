@@ -13,13 +13,30 @@
 #include <Windows.h>
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
-	: characters(characters), inputReader(inputReader), currentState(nullptr), activeUserInterfaces(nullptr),
-	  inputOptionsUserInterface(new InputOptionsUserInterface())
+	: characters(characters), currentState(nullptr)
 {
-	exitState = new ExitGameState();
-	battleState = new BattleGameState(characters, (characters.size() == 0 ? nullptr : characters.front()), this);
+	inputOptionsUserInterface = new InputOptionsUserInterface();
+	optionSelector = new OptionSelector(inputReader, inputOptionsUserInterface);
 
-	hubState = new MenuGameState(this, std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}});
+	optionSelector->getOnQueryCompletedEvent().addListener(this);
+
+	// STATE INITIALIZATION
+
+	exitState = new ExitGameState();
+
+	// TODO: Implement some way of selecting the game characters to go into the battle
+	const uint8_t partySize = 3;
+	Character* enemy = characters.front();
+
+	// Get an iterator pointing to the second element
+	std::list<Character*>::iterator startOfParty = characters.begin();
+	startOfParty++;
+
+	std::vector<Character*> party(startOfParty, characters.end());
+
+	battleState = new BattleGameState(party, enemy, optionSelector);
+
+	hubState = new MenuGameState(std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}}, optionSelector);
 
 	// Initialize the user interfaces
 	userInterfaces =
@@ -30,6 +47,32 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 
 	// Initialize start state
 	currentState = hubState;
+}
+
+GameManager::~GameManager()
+{
+	// Even though GameManager owns this instance and will delete it anyways,
+	// this is here for completeness
+	optionSelector->getOnQueryCompletedEvent().removeListener(this);
+
+	delete hubState;
+	delete exitState;
+	delete battleState;
+
+	for (const auto& pair : userInterfaces)
+	{
+		// Based on the assumption that no user interface instance appears twice
+		// (which might result in memory being freed twice)
+		for (UserInterface* userInterface : pair.second)
+		{
+			delete userInterface;
+		}
+	}
+
+	delete inputOptionsUserInterface;
+
+	delete optionSelector;
+
 }
 
 
@@ -102,33 +145,26 @@ void GameManager::start()
 	
 }
 
-uint8_t GameManager::requestInput(std::string query, std::vector<std::string> optionDescriptions)
+//void GameManager::cleanUpActiveProcess()
+//{
+//	if (activeUserInterfaces != nullptr)
+//	{
+//		for (UserInterface* ui : *activeUserInterfaces)
+//			delete ui;
+//
+//		delete activeUserInterfaces;
+//	}
+//	
+//	if(currentState != nullptr)
+//		delete currentState;
+//
+//	activeUserInterfaces = nullptr;
+//	currentState = nullptr;
+//}
+
+void GameManager::onNotify(bool eventData)
 {
-	// Special case where UI must be set up before its target activates
-	// Requesting input pauses the thread, so we have to display the UI
-	// before the theread is paused
-	inputOptionsUserInterface->setMenuOptions(optionDescriptions);
-	std::cout << inputOptionsUserInterface->getDisplay() << std::endl;
 	inputEventRaisedThisFrame = true;
-
-	return inputReader->requestInput(query, optionDescriptions);
-}
-
-void GameManager::cleanUpActiveProcess()
-{
-	if (activeUserInterfaces != nullptr)
-	{
-		for (UserInterface* ui : *activeUserInterfaces)
-			delete ui;
-
-		delete activeUserInterfaces;
-	}
-	
-	if(currentState != nullptr)
-		delete currentState;
-
-	activeUserInterfaces = nullptr;
-	currentState = nullptr;
 }
 
 

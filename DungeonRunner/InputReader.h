@@ -2,26 +2,15 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "Event.h"
-
-struct InputEventData
-{
-	std::string query;
-	std::vector<std::string> optionDesciptions;
-	InputEventData(std::string query, std::vector<std::string> optionDesciptions)
-		: query(query), optionDesciptions(optionDesciptions)
-	{}
-};
 
 class InputReader
 {
 public:
-	// DESIGN CHOICE: Split InputReader into two parts: a request and a resolution. 
-	// A request represents defining the parameters for the input query, and
-	// a resolution represents actually pausing the thread to try to acquire input
-	// from the user. This split was made to enable greater control over input, as
-	// it can cause the program to pause in undefined/unwanted places.
+	// DESIGN CHOICE: InputReader only returns a char and needs not
+	// care about what it means in any context (as opposed to being
+	// coupled to the menu logic and returning the index of the proposed
+	// options). This gives it greater flexibility and reduces coupling.
 
-	virtual uint8_t requestInput(std::string query, std::vector<std::string> optionDescriptions) = 0;
+	virtual char requestInput(std::string query) = 0;
 
 };

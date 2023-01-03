@@ -1,7 +1,7 @@
 #include "MenuGameState.h"
 
-MenuGameState::MenuGameState(GameManager* gameManager, std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions)
-	:gameManager(gameManager), _isFinished(false), selectedState(nullptr)
+MenuGameState::MenuGameState(std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions, OptionSelector* optionSelector)
+	:_isFinished(false), selectedState(nullptr), optionSelector(optionSelector)
 {
 	// DESIGN CHOICE: Pass in a pair of GameState* and string to ensure gameStates and gameStateDescriptions
 	// have corresponding elements at the same index, which is important for the options selection part
@@ -18,11 +18,13 @@ void MenuGameState::tick(float deltaTime)
 	// correpsonding states in gameStates
 
 	// TODO: Figure out how to eventually get input back to the caller
-    uint8_t response = gameManager->requestInput("What would you like to do?", gameStateDescriptions);
-	if (response >= gameStates.size())
-		selectedState = this;			// Default go back to this state
-	else
-		selectedState = gameStates[response];
+	// uint8_t response = gameManager->requestInput("What would you like to do?", gameStateDescriptions);
+	//if (response >= gameStates.size())
+	//	selectedState = this;			// Default go back to this state
+	//else
+	//	selectedState = gameStates[response];
+
+	selectedState = optionSelector->queryOptions("What would you like to do?", gameStates);
 
 	_isFinished = true;
 }

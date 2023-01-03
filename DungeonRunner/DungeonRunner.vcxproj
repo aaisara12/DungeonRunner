@@ -162,6 +162,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="DescribeBattleInteractionCommand.h" />
+    <ClInclude Include="OptionSelector.h" />
     <ClInclude Include="SetValueCommand.h" />
     <ClInclude Include="ObservableVariable.h" />
     <ClInclude Include="Subscriber.h" />

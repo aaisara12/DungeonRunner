@@ -7,4 +7,6 @@
 class ExitGameState : public GameState
 {
 	inline virtual bool isFinished() const override { return false; }
+
+	inline virtual std::string getName() const override { return "Exit"; }
 };
