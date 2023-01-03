@@ -45,13 +45,7 @@ void BattleGameState::tick(float deltaTime)
     else
     {
         for (Character* character : characters)
-        {
-            // TODO: Cache moves list for every character and 
-            // character names list upon construction of this state!
-            // Or optionally implement some kind of base class that
-            // GameManager can take in a list of and return back the
-            // selected instance.
-            
+        {     
             // Query for the move of this character 
             BattleMove* selectedMove = optionSelector->queryOptions("Move Selection", character->getMoves());
 
@@ -59,6 +53,8 @@ void BattleGameState::tick(float deltaTime)
             std::vector<Character*> validTargets = characters;
 
             Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
+
+            // TODO: queue up a command based on this input
         }
 
     }

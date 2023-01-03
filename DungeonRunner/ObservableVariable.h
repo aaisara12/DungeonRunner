@@ -2,7 +2,9 @@
 #include "Event.h"
 // A wrapper around a data field that has an
 // event attached to it to broadcast to 
-// any listeners about changes made to it
+// any listeners about changes made to it.
+// This makes it simple for the owner of the
+// variable to invoke events when they change it
 
 template <typename T>
 class ObservableVariable

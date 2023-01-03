@@ -166,6 +166,7 @@
     <ClInclude Include="SetValueCommand.h" />
     <ClInclude Include="ObservableVariable.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="TextDisplayUserInterface.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +181,7 @@
     <ClCompile Include="MainMenuUserInterface.cpp" />
     <ClCompile Include="MenuGameState.cpp" />
     <ClCompile Include="InputOptionsUserInterface.cpp" />
+    <ClCompile Include="TextDisplayUserInterface.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

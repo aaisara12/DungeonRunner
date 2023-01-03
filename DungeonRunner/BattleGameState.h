@@ -26,6 +26,8 @@ public:
 
 	inline virtual std::string getName() const override { return "Battle"; }
 
+	inline Event<std::string>& getCurrentBattleTextChangedEvent() { return currentBattleText.getOnVariableChangedEvent(); }
+
 private:
 
 	// DESIGN CHOICE: BattleGameState is a wrapper around a BattleSystem instead

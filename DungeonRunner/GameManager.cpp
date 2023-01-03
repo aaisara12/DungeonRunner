@@ -10,6 +10,7 @@
 #include "ExitGameState.h"
 #include "MainMenuUserInterface.h"
 #include "InputOptionsUserInterface.h"
+#include "TextDisplayUserInterface.h"
 #include <Windows.h>
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
@@ -25,7 +26,6 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	exitState = new ExitGameState();
 
 	// TODO: Implement some way of selecting the game characters to go into the battle
-	const uint8_t partySize = 3;
 	Character* enemy = characters.front();
 
 	// Get an iterator pointing to the second element
@@ -42,7 +42,8 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	userInterfaces =
 	{
 		{hubState, std::list<UserInterface*> {new MainMenuUserInterface("DUNGEON RUNNER")}},
-		{battleState, std::list<UserInterface*> {}}
+		{battleState, std::list<UserInterface*> {new TextDisplayUserInterface(dynamic_cast<BattleGameState*>(battleState)->getCurrentBattleTextChangedEvent())}},
+		{exitState, std::list<UserInterface*>()}
 	};
 
 	// Initialize start state
@@ -54,11 +55,8 @@ GameManager::~GameManager()
 	// Even though GameManager owns this instance and will delete it anyways,
 	// this is here for completeness
 	optionSelector->getOnQueryCompletedEvent().removeListener(this);
-
-	delete hubState;
-	delete exitState;
-	delete battleState;
-
+	
+	// Free state instances and their UIs
 	for (const auto& pair : userInterfaces)
 	{
 		// Based on the assumption that no user interface instance appears twice
@@ -67,6 +65,10 @@ GameManager::~GameManager()
 		{
 			delete userInterface;
 		}
+
+		// State should only be freed after user interfaces since they depend
+		// on the states still being allocated
+		delete pair.first;
 	}
 
 	delete inputOptionsUserInterface;
