@@ -2,6 +2,7 @@
 #include "BattleMove.h"
 #include "ApplyBattleInteractionCommand.h"
 #include "DescribeBattleInteractionCommand.h"
+#include "ClearBattleInteractionCommand.h"
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -62,8 +63,9 @@ void BattleGameState::tick(float deltaTime)
             interaction.source = character;
             interaction.target = selectedTarget;
 
-            queuedBattleCommands.push_back(DelayedCommand(0.5f, new DescribeBattleInteractionCommand(interaction)));
+            queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
             queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction)));
+            queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
         }
 
     }

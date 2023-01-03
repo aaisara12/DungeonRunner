@@ -147,6 +147,7 @@
     <ClInclude Include="BattleOutcomeData.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterLoader.h" />
+    <ClInclude Include="ClearBattleInteractionCommand.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="DummyCharacterLoader.h" />
     <ClInclude Include="Enemy.h" />
