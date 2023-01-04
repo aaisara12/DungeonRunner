@@ -1,7 +1,7 @@
 #pragma once
-#include<unordered_map>
-#include<list>
-#include<string>
+#include <unordered_map>
+#include <list>
+#include <string>
 #include "Event.h"
 #include "BattleMove.h"
 #include "BattleInteraction.h"

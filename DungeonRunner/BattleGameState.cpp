@@ -16,12 +16,13 @@ BattleGameState::BattleGameState(std::vector<Character*> characters, Character* 
 
 void BattleGameState::tick(float deltaTime)
 {
-    if (!queuedBattleCommands.empty())
+    if (queuedBattleCommands.empty())
+        initializeCharacterActions();
+    else
     {
         queuedBattleCommands.front().timeRemaining -= deltaTime;
         if (queuedBattleCommands.front().timeRemaining <= 0)
         {
-
             // Pop command before execution so that command can
             // add more commands to the front of the queue easily
             Command* command = queuedBattleCommands.front().command;
@@ -34,40 +35,35 @@ void BattleGameState::tick(float deltaTime)
             {
                 // TODO: Link this up with the actual display speed of the UI?
                 const float estimatedReadingSpeedCharsPerSecond = 10;
-                queuedBattleCommands.push_front(DelayedCommand(currentBattleText.get().size()/estimatedReadingSpeedCharsPerSecond, command));
+                queuedBattleCommands.push_front(DelayedCommand(currentBattleText.get().size() / estimatedReadingSpeedCharsPerSecond, command));
             }
-
-            //queuedBattleCommands.insert(queuedBattleCommands.begin(), generatedCommands.begin(), generatedCommands.end());
-
-            // TODO: Implement commands returning commands
-            // TODO: Implement evaluate input command or logic (need to decide which)
 
             delete command;
         }
     }
-    else
+}
+
+void BattleGameState::initializeCharacterActions()
+{
+    for (Character* character : characters)
     {
-        for (Character* character : characters)
-        {     
-            // Query for the move of this character 
-            BattleMove* selectedMove = optionSelector->queryOptions("Move Selection", character->getMoves());
+        // Query for the move of this character 
+        BattleMove* selectedMove = optionSelector->queryOptions("Move Selection", character->getMoves());
 
-            // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
-            std::vector<Character*> validTargets = characters;
+        // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
+        std::vector<Character*> validTargets = characters;
 
-            Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
+        Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
 
-            // TODO: queue up a command based on this input
-            BattleInteraction interaction;
-            interaction.move = selectedMove;
-            interaction.source = character;
-            interaction.target = selectedTarget;
+        // TODO: queue up a command based on this input
+        BattleInteraction interaction;
+        interaction.move = selectedMove;
+        interaction.source = character;
+        interaction.target = selectedTarget;
 
-            queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
-            queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction)));
-            queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
-        }
-
+        queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
+        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction)));
+        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
     }
 }
 

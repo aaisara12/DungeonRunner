@@ -58,7 +58,10 @@ BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInte
 		// Apply health change to character
 		stats[Character::CUR_HP] += healingReceived - damageTaken;
 		if (stats[Character::CUR_HP] < 0)
+		{
 			stats[Character::CUR_HP] = 0;
+			data.isDefeated = true;
+		}
 		if (stats[Character::CUR_HP] > stats[Character::MAX_HP])
 			stats[Character::CUR_HP] = stats[Character::MAX_HP];
 

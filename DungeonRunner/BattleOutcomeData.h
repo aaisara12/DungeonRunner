@@ -8,12 +8,13 @@ struct BattleOutcomeData
 {
 public:
 	bool isHit;
+	bool isDefeated;
 	int damageTaken;
 	int healingReceived;
 
 	std::list<BattleInteraction> generatedInteractions;
 
 	BattleOutcomeData()
-		: isHit(false), damageTaken(0), healingReceived(0)
+		: isHit(false), isDefeated(false), damageTaken(0), healingReceived(0)
 	{}
 };

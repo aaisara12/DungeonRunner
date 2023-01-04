@@ -42,6 +42,9 @@ private:
 	//BattleSystem* battleSystem;
 
 
+	// Helper function for setting up the next round of moves for the characters
+	// in the game
+	void initializeCharacterActions();
 
 	OptionSelector* optionSelector;
 

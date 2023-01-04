@@ -105,6 +105,9 @@
     <ClInclude Include="ClearBattleInteractionCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BattleEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

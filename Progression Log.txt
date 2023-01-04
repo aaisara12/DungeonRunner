@@ -76,6 +76,12 @@ arose as a result of a previous question are nested within the question.
 				- Commands don't need to know about queue at all or any
 			  	  external logic
 				- Direct link between commands and commands they spawn
+			* How do I build a flexible system for generating commands based on
+			  the outcome of the command?
+				A: Store list of predicates paired with generator functions.
+				   When a command is executed, check whether any of the command's
+				   predicates evaluate true, and if so, generate commands based on
+				   the corresponding generator
 
 * How do I communicate information about the input state to the GameManager?
 	A: 2-phase input module with events that GM listens for
