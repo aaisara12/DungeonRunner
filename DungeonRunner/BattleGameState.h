@@ -28,6 +28,19 @@ public:
 
 	inline Event<std::string>& getCurrentBattleTextChangedEvent() { return currentBattleText.getOnVariableChangedEvent(); }
 
+	// COMMANDS
+	// DESIGN CHOICE: Queue up command upon character defeat instead of subscribing
+	// to defeat event so that BattleGameState does not need to become an observer,
+	// which adds complexity and prevents it from responding to different events.
+	// The whole point of events is to 1.) save computation resources by only
+	// triggering the logic at select moments instead of continuously checking
+	// and 2.) transfer dependency away from the broadcaster and onto the listeners.
+	// This command is only called once every few seconds at most and thus changing
+	// it to invoke upon hearing an event wouldn't really improve computation speed
+	void evaluateBattleState();
+
+	void endBattle();
+
 private:
 
 	// DESIGN CHOICE: BattleGameState is a wrapper around a BattleSystem instead

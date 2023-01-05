@@ -1,5 +1,8 @@
 #include "ApplyBattleInteractionCommand.h"
 #include "DescribeBattleInteractionCommand.h"
+#include "ChangeTextCommand.h"
+#include "EvaluateCharacterStateCommand.h"
+#include "EvaluateBattleStateCommand.h"
 #include "Character.h"
 #include <time.h>
 
@@ -15,8 +18,16 @@ std::list<Command*> ApplyBattleInteractionCommand::Execute(ObservableVariable<st
 	for (const BattleInteraction& interaction : outcome.generatedInteractions)
 	{
 		generatedCommands.push_back(new DescribeBattleInteractionCommand(interaction));
-		generatedCommands.push_back(new ApplyBattleInteractionCommand(interaction));
+		generatedCommands.push_back(new ApplyBattleInteractionCommand(interaction, battleGameState));
 	}
+
+	// This command is there to inform the player about the state of the target character after
+	// applying the generated commands (which may harm/heal the target)
+	generatedCommands.push_back(new EvaluateCharacterStateCommand(battleInteraction.target));
+
+	// This command ensures that the battle will end properly if one of the defeat/victory conditions
+	// have been met
+	generatedCommands.push_back(new EvaluateBattleStateCommand(battleGameState));
 
 	if (outcome.isHit)
 	{

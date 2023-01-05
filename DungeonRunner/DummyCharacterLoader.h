@@ -5,7 +5,7 @@ class DummyCharacterLoader : public CharacterLoader
 public:
 	virtual std::list<Character*> getCharacters()
 	{
-		BattleMove* punchMove = new BattleMove("Punch", 10, 0, 0.5f, 1, "throws a fist!");
+		BattleMove* punchMove = new BattleMove("Punch", 10, 0, 1.0f, 1, "throws a fist!");
 		BattleMove* healMove = new BattleMove("Heal", 0, 20, 1, 2, "glows with purity!");
 
 		std::vector<BattleMove*> moveset1 = { punchMove, healMove };

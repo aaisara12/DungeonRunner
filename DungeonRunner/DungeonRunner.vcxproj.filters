@@ -93,9 +93,6 @@
     <ClInclude Include="InputOptionsUserInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Subscriber.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OptionSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -106,6 +103,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BattleEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangeTextCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subscriber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvaluateBattleStateCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndBattleCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvaluateCharacterStateCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -147,6 +159,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TextDisplayUserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EvaluateBattleStateCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndBattleCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

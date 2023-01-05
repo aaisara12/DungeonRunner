@@ -146,12 +146,16 @@
     <ClInclude Include="BattleInteraction.h" />
     <ClInclude Include="BattleMove.h" />
     <ClInclude Include="BattleOutcomeData.h" />
+    <ClInclude Include="ChangeTextCommand.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterLoader.h" />
     <ClInclude Include="ClearBattleInteractionCommand.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="DummyCharacterLoader.h" />
+    <ClInclude Include="EndBattleCommand.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EvaluateBattleStateCommand.h" />
+    <ClInclude Include="EvaluateCharacterStateCommand.h" />
     <ClInclude Include="ExitGameState.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="HealthBarUserInterface.h" />
@@ -177,6 +181,8 @@
     <ClCompile Include="BattleGameState.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="DummyCharacterLoader.cpp" />
+    <ClCompile Include="EndBattleCommand.cpp" />
+    <ClCompile Include="EvaluateBattleStateCommand.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HealthBarUserInterface.cpp" />
     <ClCompile Include="main.cpp" />

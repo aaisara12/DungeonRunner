@@ -57,7 +57,7 @@ BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInte
 
 		// Apply health change to character
 		stats[Character::CUR_HP] += healingReceived - damageTaken;
-		if (stats[Character::CUR_HP] < 0)
+		if (stats[Character::CUR_HP] <= 0)
 		{
 			stats[Character::CUR_HP] = 0;
 			data.isDefeated = true;
@@ -70,8 +70,17 @@ BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInte
 		data.damageTaken = damageTaken;
 		data.healingReceived = healingReceived;
 
-		// TODO: Run through all conditions and check for any interactions
-		data.generatedInteractions = std::list<BattleInteraction>();
+		// Run through all conditions and check for any interactions
+		std::list<BattleInteraction> generatedInteractions;
+		for (const BattleEffect* effect : effects)
+		{
+			if (effect->condition(data, battleInteraction))
+			{
+				std::list<BattleInteraction> interactions = effect->interactionsGenerator(battleInteraction);
+				generatedInteractions.insert(generatedInteractions.end(), interactions.begin(), interactions.end());
+			}
+		}
+		data.generatedInteractions = generatedInteractions;
 	}
 	else
 		data.isHit = false;

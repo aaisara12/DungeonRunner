@@ -6,6 +6,7 @@
 #include "BattleMove.h"
 #include "BattleInteraction.h"
 #include "BattleOutcomeData.h"
+#include "BattleEffect.h"
 
 struct ContainerUpdateEventData;
 class Character
@@ -51,6 +52,10 @@ private:
 	// the movesets of the characters, but since they stay constant throughout the
 	// entire game, we don't gain much from the flexibility of a list
 	std::vector<BattleMove*> moves;
+
+	// Battle effects that trigger on the character upon being targeted by
+	// another character
+	std::vector<BattleEffect*> effects;
 	
 	// Event invoked when this character's health information is changed
 	Event<ContainerUpdateEventData> healthDataChangedEvent;

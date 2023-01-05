@@ -3,6 +3,9 @@
 #include "ApplyBattleInteractionCommand.h"
 #include "DescribeBattleInteractionCommand.h"
 #include "ClearBattleInteractionCommand.h"
+#include "ChangeTextCommand.h"
+#include "EvaluateBattleStateCommand.h"
+#include "EndBattleCommand.h"
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -43,6 +46,45 @@ void BattleGameState::tick(float deltaTime)
     }
 }
 
+void BattleGameState::evaluateBattleState()
+{
+    // If party has been completely defeated, then queue DEFEAT commands at front of queue (defeat msg, end game)
+    // NOTE: Queueing at front ensures that any previous victory condition (boss being defeated) is 
+    // overridden by this defeat condition, which is necessary if, for example, the boss has a self-destruct move
+    // that deals damage to everyone and defeats everyone in the party
+    // Else if boss has been defeated, then queue VICTORY commands at end of queue (victory msg, xp check, end game) 
+
+    bool isPartyDefeated = true;
+    for (Character* character : characters)
+    {
+        if (character->getStats()[Character::StatType::CUR_HP] > 0)
+            isPartyDefeated = false;
+    }
+
+    bool isEnemyDefeated = boss->getStats()[Character::StatType::CUR_HP] <= 0;
+
+
+    // Check either of the two end game conditions
+    if (isPartyDefeated)
+    {
+        queuedBattleCommands.clear();
+        queuedBattleCommands.push_back(DelayedCommand(0, new ChangeTextCommand("Your party has been defeated.")));
+        queuedBattleCommands.push_back(DelayedCommand(2, new EndBattleCommand(this)));
+    }
+    else if (isEnemyDefeated)
+    {
+        queuedBattleCommands.clear();
+        queuedBattleCommands.push_back(DelayedCommand(2, new ChangeTextCommand("Victory!")));
+        queuedBattleCommands.push_back(DelayedCommand(2, new EndBattleCommand(this)));
+
+    }
+}
+
+void BattleGameState::endBattle()
+{
+    _isFinished = true;
+}
+
 void BattleGameState::initializeCharacterActions()
 {
     for (Character* character : characters)
@@ -62,7 +104,7 @@ void BattleGameState::initializeCharacterActions()
         interaction.target = selectedTarget;
 
         queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
-        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction)));
+        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction, this)));
         queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
     }
 }
