@@ -3,7 +3,7 @@
 MainMenuUserInterface::MainMenuUserInterface( std::string title)
     :UserInterface(30, 1)
 {
-    displayLines.push_back(DisplayLine(title, CENTER));
+    getDisplayLines().push_back(DisplayLine(title, CENTER));
 }
 
 //const std::vector<UserInterface::DisplayLine>& MainMenuUserInterface::display()

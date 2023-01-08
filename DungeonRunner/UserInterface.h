@@ -20,6 +20,9 @@ public:
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
 
+	// Check whether there has been an update to the UI
+	inline bool isDirty() { return _isDirty; }
+
 
 protected:
 
@@ -35,26 +38,34 @@ protected:
 		{}
 	};
 
-	// Returns a visual representation of the UI
-	// 
-	// DESIGN CHOICE: Could have just used a vector<string>, which would be
-	// more direct and simpler to implement, but I thought it was important
-	// to have this fine-grain adjustment of the text on each line so that
-	// derived classes don't need to worry about making sure the content
-	// looks right on the screen.
-	//virtual const std::vector<DisplayLine>& display() = 0;
 
-	// The current UI display represented as lines of display formatting
-	// DESIGN CHOICE: Expose a protected data member that derived classes
-	// can modify directly instead of making derived classes instantiate
-	// their own vectors and copy them over through a member function.
-	// I made this switch to reduce the amount of copying required,
-	// given that the display function is called every frame. The derived
-	// class will only need to change the data member when something
-	// of interest happens, not every frame.
-	std::vector<DisplayLine> displayLines;
+	// DESIGN CHOICE: A dedicated accessor function automatically raises
+	// the isDirty flag to notify users of this object that a change to
+	// the UI has LIKELY occurred (you probably wouldn't call the accessor
+	// as a derived class unless you were changing it). The reason I didn't
+	// use a setter to ensure the display lines are actually changing when
+	// the flag is raised is because it would require changing a good amount
+	// of code and make implementations more complex with having to create
+	// local vectors then copying them over. I figured this implementation's
+	// weakness of not guaranteeing a change is only fully exposed if there
+	// are tons of calls to it that don't actually make changes, of which 
+	// there are none at the moment.
+	std::vector<DisplayLine>& getDisplayLines()
+	{
+		_isDirty = true;
+		return displayLines;
+	}
 
 private:
+
+	// Flag to keep track of whether there is a change that has not been
+	// seen by the user of this object. It relies on the assumption that
+	// the owner sees the update when getDisplay() is called and that
+	// an update has occurred when getDisplayLines() is called by a
+	// derived class.
+	bool _isDirty;
+
+	std::vector<DisplayLine> displayLines;
 
 	// Frame width is defined by number of characters between first "//" and last "//"
 	// so that a border of thickness 2 = "//" is always guaranteed

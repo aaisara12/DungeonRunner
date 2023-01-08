@@ -13,6 +13,6 @@ TextDisplayUserInterface::~TextDisplayUserInterface()
 
 void TextDisplayUserInterface::onNotify(std::string eventData)
 {
-	displayLines.clear();
-	displayLines.push_back(DisplayLine(eventData, LEFT));
+	getDisplayLines().clear();
+	getDisplayLines().push_back(DisplayLine(eventData, LEFT));
 }
