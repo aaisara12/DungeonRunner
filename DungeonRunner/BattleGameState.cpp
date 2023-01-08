@@ -50,6 +50,20 @@ void BattleGameState::tick(float deltaTime)
     }
 }
 
+void BattleGameState::onEnter()
+{
+    // Check the current game state. This prevents a battle from occurring
+    // if the enemy / party have already been defeated ( HP == 0)
+    evaluateBattleState();
+}
+
+void BattleGameState::onExit()
+{
+    currentBattleText.set("");
+    queuedBattleCommands.clear();
+    _isFinished = false;
+}
+
 void BattleGameState::evaluateBattleState()
 {
     // If party has been completely defeated, then queue DEFEAT commands at front of queue (defeat msg, end game)
@@ -78,7 +92,7 @@ void BattleGameState::evaluateBattleState()
     else if (isEnemyDefeated)
     {
         queuedBattleCommands.clear();
-        queuedBattleCommands.push_back(DelayedCommand(2, new ChangeTextCommand("Victory!")));
+        queuedBattleCommands.push_back(DelayedCommand(0, new ChangeTextCommand("Victory!")));
         queuedBattleCommands.push_back(DelayedCommand(2, new EndBattleCommand(this)));
 
     }

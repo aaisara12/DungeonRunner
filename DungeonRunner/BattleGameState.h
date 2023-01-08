@@ -22,6 +22,10 @@ public:
 
 	virtual void tick(float deltaTime) override;
 
+	virtual void onEnter() override;
+	
+	virtual void onExit() override;
+
 	inline virtual bool isFinished() const override { return _isFinished; }
 
 	inline virtual std::string getName() const override { return "Battle"; }
