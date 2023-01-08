@@ -32,14 +32,18 @@ void BattleGameState::tick(float deltaTime)
             queuedBattleCommands.pop_front();
             std::list<Command*> generatedCommands = command->Execute(currentBattleText);
 
-            // Push all generated commands onto command queue (it's recursive, so go straight to the front)
-            // with delay that scales based on time it takes to read the current text
-            for (Command* command : generatedCommands)
+            // Add delays to all of the commands
+            std::list<DelayedCommand> generatedDelayedCommands;
+            for (Command* generatedCommand : generatedCommands)
             {
-                // TODO: Link this up with the actual display speed of the UI?
-                const float estimatedReadingSpeedCharsPerSecond = 10;
-                queuedBattleCommands.push_front(DelayedCommand(currentBattleText.get().size() / estimatedReadingSpeedCharsPerSecond, command));
+                // DESIGN CHOICE: Use a fixed delay of 2 seconds for simplicity instead of scaling
+                // with how much text there is to read. This will help reduce variables while debugging
+                // at least until the entire project is stabilized.
+                generatedDelayedCommands.push_back(DelayedCommand(2.0f, generatedCommand));
             }
+
+            // Push all generated commands onto command queue (commands are resolved LIFO, so push at front of queue)
+            queuedBattleCommands.insert(queuedBattleCommands.begin(), generatedDelayedCommands.begin(), generatedDelayedCommands.end());
 
             delete command;
         }
