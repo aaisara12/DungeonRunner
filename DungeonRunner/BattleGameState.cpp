@@ -13,9 +13,33 @@
 // to test input creation and can assume it works for its own tests.
 // This way, input creation logic does not need to clutter this process's code.
 
-BattleGameState::BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector)
-    : optionSelector(optionSelector), characters(characters), boss(boss), _isFinished(false)
-{}
+//BattleGameState::BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector)
+//    : optionSelector(optionSelector), characters(characters), boss(boss), _isFinished(false)
+//{}
+
+BattleGameState::BattleGameState(std::vector<Character*> partyA, std::vector<Character*> partyB, InputReader* userInput, InputReader* aiInput, OptionSelector* optionSelector)
+    : optionSelector(optionSelector), _isFinished(false)
+{
+
+    // userInput and aiInput are not coupled with party A or B necessarily, which allows for user and CPU-controlled
+    // characters in both parties
+   
+    // User-controlled ally characters
+    for (auto character : partyA)
+    {
+        // In current implementation, all characters in Party A are user-controlled
+        battlingCharacters.emplace_back(character, Team::ALLY, userInput);
+    }
+
+    // CPU-controlled enemy characters
+    for (auto character : partyB)
+    {
+        battlingCharacters.emplace_back(character, Team::ENEMY, aiInput);
+    }
+
+    // Perhaps in a future implementation, there could be a Party C which contains CPU-controlled ally characters
+
+}
 
 void BattleGameState::tick(float deltaTime)
 {
@@ -73,13 +97,19 @@ void BattleGameState::evaluateBattleState()
     // Else if boss has been defeated, then queue VICTORY commands at end of queue (victory msg, xp check, end game) 
 
     bool isPartyDefeated = true;
-    for (Character* character : characters)
-    {
-        if (character->getStats()[Character::StatType::CUR_HP] > 0)
-            isPartyDefeated = false;
-    }
+    bool isEnemyDefeated = true;
 
-    bool isEnemyDefeated = boss->getStats()[Character::StatType::CUR_HP] <= 0;
+    for (const auto& battlingCharacter : battlingCharacters)
+    {
+        if (battlingCharacter.character->getStats()[Character::StatType::CUR_HP] > 0)
+        {
+            if (battlingCharacter.team == Team::ALLY)
+                isPartyDefeated = false;
+            if (battlingCharacter.team == Team::ENEMY)
+                isEnemyDefeated = false;
+        }
+
+    }
 
 
     // Check either of the two end game conditions
@@ -105,15 +135,18 @@ void BattleGameState::endBattle()
 
 void BattleGameState::initializeCharacterActions()
 {
-    for (Character* character : characters)
+    for (const auto& battlingCharacter : battlingCharacters)
     {
+        Character* character = battlingCharacter.character;
+        InputReader* inputReader = battlingCharacter.inputReader;
+
         // Query for the move of this character 
-        BattleMove* selectedMove = optionSelector->queryOptions("Move Selection", character->getMoves());
+        BattleMove* selectedMove = optionSelector->queryOptions(inputReader, "Move Selection", character->getMoves());
 
         // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
-        std::vector<Character*> validTargets = characters;
+        std::vector<Character*> validTargets = getTargetCharacters(battlingCharacter, 0);
 
-        Character* selectedTarget = optionSelector->queryOptions("Target Selection", validTargets);
+        Character* selectedTarget = optionSelector->queryOptions(inputReader, "Target Selection", validTargets);
 
         // TODO: queue up a command based on this input
         BattleInteraction interaction;
@@ -125,5 +158,27 @@ void BattleGameState::initializeCharacterActions()
         queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction, this)));
         queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
     }
+}
+
+std::vector<Character*> BattleGameState::getTargetCharacters(BattleCharacter sourceCharacter, int targetProtocolNum)
+{
+    // TODO: Implement!
+    std::vector<Character*> targets;
+
+    switch (targetProtocolNum)
+    {
+    case 0:
+        // Targets: all opponents
+        for (const auto& battlingCharacter : battlingCharacters)
+        {
+            if (battlingCharacter.team != sourceCharacter.team)
+                targets.push_back(battlingCharacter.character);
+        }
+        break;
+    default:
+        break;
+    }
+ 
+    return targets;
 }
 

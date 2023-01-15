@@ -7,7 +7,7 @@
 class MenuGameState : public HubGameState
 {
 public:
-	MenuGameState(std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions, OptionSelector* optionSelector);
+	MenuGameState(std::vector<std::pair<GameState*, std::string>> gameStatesAndDescriptions, OptionSelector* optionSelector, InputReader* inputReader);
 
 	virtual void tick(float deltaTime) override;
 	virtual void onEnter() override;
@@ -20,6 +20,7 @@ public:
 
 private:
 	OptionSelector* optionSelector;
+	InputReader* inputReader;
 
 	std::vector<GameState*> gameStates;
 	std::vector<std::string> gameStateDescriptions;

@@ -18,7 +18,9 @@ public:
 	// ensure a proper input reading module; this module does not have
 	// to test input creation and can assume it works for its own tests.
 	// This way, input creation logic does not need to clutter this process's code.
-	BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector);
+	//BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector);
+
+	BattleGameState(std::vector<Character*> partyA, std::vector<Character*> partyB, InputReader* userInput, InputReader* aiInput, OptionSelector* optionSelector);
 
 	virtual void tick(float deltaTime) override;
 
@@ -63,7 +65,8 @@ private:
 	// in the game
 	void initializeCharacterActions();
 
-	OptionSelector* optionSelector;
+
+	//OptionSelector* optionSelector;
 
 	// Text describing what's going on in the battle (used by UI)
 	ObservableVariable<std::string> currentBattleText;
@@ -71,13 +74,45 @@ private:
 	// DESIGN CHOICE: Store characters in a vector since target selection 
 	// is by index, and set of characters likely won't change frequently,
 	// making a vector more optimal for this section
-	std::vector<Character*> characters;
+	//std::vector<Character*> characters;
 
 	// Boss character
-	Character* boss;
+	//Character* boss;
 
 	// Queue of current actions to happen in the battle
 	std::list<DelayedCommand> queuedBattleCommands;
 
 	bool _isFinished;
+
+
+	enum Team {ALLY, ENEMY};
+
+	// Data structure representing a character in this battle
+	// DESIGN CHOICE: Keeps all information relevant to each
+	// character in one place instead of modifying the
+	// Character data structure, which would introduce
+	// irrelevant data fields to it that would not make sense
+	// in any other context
+	struct BattleCharacter
+	{
+		Character* character;
+		Team team;
+		InputReader* inputReader;
+
+		// Make it easier to instantiate in one line
+		BattleCharacter(Character* character, Team team, InputReader* inputReader)
+			: character(character), team(team), inputReader(inputReader)
+		{}
+	};
+
+	// Keeps track of all active characters
+	// DESIGN CHOICE: Keep list of BattleCharacters instead of
+	// Characters*, which makes it easy/quick to remove/add characters
+	// that have been defeated/revived/summoned and check whether
+	// a certain party has been defeated.
+	std::list<BattleCharacter> battlingCharacters;
+
+	OptionSelector* optionSelector;
+
+	std::vector<Character*> getTargetCharacters(BattleCharacter sourceCharacter, int targetProtocolNum);
 };

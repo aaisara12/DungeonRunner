@@ -82,6 +82,8 @@ arose as a result of a previous question are nested within the question.
 				   When a command is executed, check whether any of the command's
 				   predicates evaluate true, and if so, generate commands based on
 				   the corresponding generator
+		* How can I debug this Command queue? What's tricky is that
+	        the debugger doesn't quite work 
 
 * How do I communicate information about the input state to the GameManager?
 	A: 2-phase input module with events that GM listens for
@@ -96,6 +98,23 @@ arose as a result of a previous question are nested within the question.
 		- Much simpler to get intended behavior
 		- Can keep a single instance input user interface in GM
 		- GameManager becomes a dependency for game states that want input
+
+* How do I implement target selection for all characters?
+	A: Loop through all party characters and gather input one at a time.
+	   Then for the boss, randomly select a party character.
+	B> Have one list of all characters in the battle and gather input
+	   from each, using an abstract InputReader that allows for
+	   different implementations for party vs boss/enemies
+		- Don't need special case handling -- simpler code
+	* How do we store information about the character's team and input
+	  information?
+		A: Modify Character definition to include these fields
+		B> Define a wrapper data structure that pairs Character
+		   pointer with team and input information
+			- Keeps team and input info within the scope of the
+			  battle. Modifying Character definition would've allowed
+			  irrelevant fields to leak into other contexts, which
+			  is a waste of space
 
 * How do I animate the UI to make the game more lively?
 	A: Make base UI class inherit from process and place UI into

@@ -18,7 +18,7 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	: characters(characters), currentState(nullptr)
 {
 	inputOptionsUserInterface = new InputOptionsUserInterface();
-	optionSelector = new OptionSelector(inputReader, inputOptionsUserInterface);
+	optionSelector = new OptionSelector(inputOptionsUserInterface);
 
 	optionSelector->getOnQueryCompletedEvent().addListener(this);
 
@@ -27,17 +27,15 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	exitState = new ExitGameState();
 
 	// TODO: Implement some way of selecting the game characters to go into the battle
-	Character* enemy = characters.front();
+	// ASSUMPTION: ++ returns post-increment value
+	std::vector<Character*> ally(++characters.begin(), characters.end());
+	InputReader* allyInput = inputReader;
+	std::vector<Character*> enemy(characters.begin(), ++characters.begin());
+	InputReader* enemyInput = inputReader;
 
-	// Get an iterator pointing to the second element
-	std::list<Character*>::iterator startOfParty = characters.begin();
-	startOfParty++;
+	battleState = new BattleGameState(ally, enemy, allyInput, enemyInput, optionSelector);
 
-	std::vector<Character*> party(startOfParty, characters.end());
-
-	battleState = new BattleGameState(party, enemy, optionSelector);
-
-	hubState = new MenuGameState(std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}}, optionSelector);
+	hubState = new MenuGameState(std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}}, optionSelector, inputReader);
 
 	// Initialize the user interfaces
 	userInterfaces =

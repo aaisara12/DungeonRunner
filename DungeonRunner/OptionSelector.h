@@ -12,19 +12,18 @@ public:
 	// DESIGN CHOICE: Inject user interface into options selector in case it needs to
 	// be formatted in a particular way. For example, the GameManager should ensure
 	// all user interfaces used in the game have the same dimensions.
-	OptionSelector(InputReader* inputReader, InputOptionsUserInterface* userInterface)
-		: inputReader(inputReader), userInterface(userInterface)
+	OptionSelector(InputOptionsUserInterface* userInterface)
+		: userInterface(userInterface)
 	{}
 
 	// Query field is important for helping user distinguish what
 	// kind of choice they're making (character move, target, etc.)
 	template <typename T>
-	T queryOptions(std::string query, const std::vector<T>& options);
+	T queryOptions(InputReader* inputReader, std::string query, const std::vector<T>& options);
 
 	inline Event<bool>& getOnQueryCompletedEvent() { return onQueryCompleted; }
 
 private:
-	InputReader* inputReader;
 	InputOptionsUserInterface* userInterface;
 
 	// Event data type is bool as a filler since no actual data other than
@@ -34,7 +33,7 @@ private:
 
 
 template<typename T>
-inline T OptionSelector::queryOptions(std::string query, const std::vector<T>& options)
+inline T OptionSelector::queryOptions(InputReader* inputReader, std::string query, const std::vector<T>& options)
 {
 	// Special case where UI must be set up before its target activates
 	// Requesting input pauses the thread, so we have to display the UI
