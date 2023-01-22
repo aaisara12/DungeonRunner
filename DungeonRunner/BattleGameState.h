@@ -114,5 +114,5 @@ private:
 
 	OptionSelector* optionSelector;
 
-	std::vector<Character*> getTargetCharacters(BattleCharacter sourceCharacter, int targetProtocolNum);
+	std::vector<Character*> getTargetCharacters(BattleCharacter sourceCharacter, BattleMove::TargetGroup targetGroup);
 };

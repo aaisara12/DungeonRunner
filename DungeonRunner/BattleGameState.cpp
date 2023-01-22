@@ -13,10 +13,6 @@
 // to test input creation and can assume it works for its own tests.
 // This way, input creation logic does not need to clutter this process's code.
 
-//BattleGameState::BattleGameState(std::vector<Character*> characters, Character* boss, OptionSelector* optionSelector)
-//    : optionSelector(optionSelector), characters(characters), boss(boss), _isFinished(false)
-//{}
-
 BattleGameState::BattleGameState(std::vector<Character*> partyA, std::vector<Character*> partyB, InputReader* userInput, InputReader* aiInput, OptionSelector* optionSelector)
     : optionSelector(optionSelector), _isFinished(false)
 {
@@ -144,11 +140,10 @@ void BattleGameState::initializeCharacterActions()
         BattleMove* selectedMove = optionSelector->queryOptions(inputReader, "Move Selection", character->getMoves());
 
         // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
-        std::vector<Character*> validTargets = getTargetCharacters(battlingCharacter, 0);
+        std::vector<Character*> validTargets = getTargetCharacters(battlingCharacter, selectedMove->targetGroup);
 
         Character* selectedTarget = optionSelector->queryOptions(inputReader, "Target Selection", validTargets);
 
-        // TODO: queue up a command based on this input
         BattleInteraction interaction;
         interaction.move = selectedMove;
         interaction.source = character;
@@ -160,23 +155,42 @@ void BattleGameState::initializeCharacterActions()
     }
 }
 
-std::vector<Character*> BattleGameState::getTargetCharacters(BattleCharacter sourceCharacter, int targetProtocolNum)
+std::vector<Character*> BattleGameState::getTargetCharacters(BattleCharacter sourceCharacter, BattleMove::TargetGroup targetGroup)
 {
     // TODO: Implement!
     std::vector<Character*> targets;
 
-    switch (targetProtocolNum)
+    // DESIGN CHOICE: Default conditions evaluate to false so that unimplemented target groups
+    // by default don't result in any targets, which makes it easier to detect the error
+    std::function<bool(Team, Team)> teamCondition = [](Team a, Team b) {return false; };
+    std::function<bool(Character*, Character*)> characterCondition = [](Character* a, Character* b) {return false; };
+
+    // DESIGN CHOICE: Modify conditions for adding characters instead of performing logic.
+    // While it requires extra variables, it makes the code easier to understand and reduces
+    // repetitions
+    switch (targetGroup)
     {
-    case 0:
-        // Targets: all opponents
-        for (const auto& battlingCharacter : battlingCharacters)
-        {
-            if (battlingCharacter.team != sourceCharacter.team)
-                targets.push_back(battlingCharacter.character);
-        }
+    case BattleMove::ALLY:
+        teamCondition = [](Team target, Team source) {return target == source; };
+        characterCondition = [](Character* target, Character* source) { return true; };
         break;
+    case BattleMove::ALLY_OTHER:
+        teamCondition = [](Team target, Team source) {return target == source; };
+        characterCondition = [](Character* target, Character* source) { return target != source; };
+        break;
+    case BattleMove::ENEMY:
+        teamCondition = [](Team target, Team source) {return target != source; };
+        characterCondition = [](Character* target, Character* source) { return true; };
     default:
         break;
+    }
+
+    // Add characters to target list based on condition check
+    for (const auto& battlingCharacter : battlingCharacters)
+    {
+        if (teamCondition(battlingCharacter.team, sourceCharacter.team) &&
+            characterCondition(battlingCharacter.character, sourceCharacter.character))
+            targets.push_back(battlingCharacter.character);
     }
  
     return targets;

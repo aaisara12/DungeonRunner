@@ -1,0 +1,7 @@
+Backlog:
+
+- BUG -- Long pause of blank text in between character actions
+- Implement group ally and enemy targeting (perhaps use special Character*)
+- Implement enemy AI input module
+- Implement defined behavior for when no targets are available (move failed?)
+- Implement battle text formatting
