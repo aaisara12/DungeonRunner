@@ -1,9 +1,13 @@
 #pragma once
 #include <string>
 #include "Observer.h"
+#include "Event.h"
 #include <vector>
 #include <unordered_map>
 
+/// <summary>
+/// This is a base class that contains functionality for displaying text on the screen. 
+/// </summary>
 class UserInterface
 {
 public:
@@ -15,14 +19,15 @@ public:
 	};
 
 	UserInterface(int frameWidthInCharacters, int framePaddingInUnits);
-	inline virtual ~UserInterface() {}
+	virtual ~UserInterface();
 
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
 
 	// Check whether there has been an update to the UI
-	inline bool isDirty() { return _isDirty; }
+	bool isDirty();
 
+	Event<UserInterface*>& getOnDirtyEvent();
 
 protected:
 
@@ -50,11 +55,7 @@ protected:
 	// weakness of not guaranteeing a change is only fully exposed if there
 	// are tons of calls to it that don't actually make changes, of which 
 	// there are none at the moment.
-	std::vector<DisplayLine>& getDisplayLines()
-	{
-		_isDirty = true;
-		return displayLines;
-	}
+	std::vector<DisplayLine>& getDisplayLines();
 
 private:
 
@@ -93,6 +94,9 @@ private:
 	// formatting functions. Admittedly, these are not too likely to change, and the main reason
 	// I used a mapping was to get practice using function pointers :O
 	static AlignmentToFunctionMap alignmentTypeToAlignmentFunction;
+
+
+	Event<UserInterface*> onDirty;
 
 
 };

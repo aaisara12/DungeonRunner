@@ -13,6 +13,8 @@ UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInUnits
     this->frameWidthInCharacters = std::max(frameWidthInCharacters, 2 * horizontalFramePaddingInCharacters);
 }
 
+UserInterface::~UserInterface() {}
+
 std::string UserInterface::getDisplay()
 {
     std::string finalDisplay = "";
@@ -46,6 +48,35 @@ std::string UserInterface::getDisplay()
     _isDirty = false;
 
     return finalDisplay;
+}
+
+// Check whether there has been an update to the UI
+
+bool UserInterface::isDirty() { return _isDirty; }
+
+Event<UserInterface*>& UserInterface::getOnDirtyEvent()
+{
+    return onDirty;
+}
+
+
+// DESIGN CHOICE: A dedicated accessor function automatically raises
+// the isDirty flag to notify users of this object that a change to
+// the UI has LIKELY occurred (you probably wouldn't call the accessor
+// as a derived class unless you were changing it). The reason I didn't
+// use a setter to ensure the display lines are actually changing when
+// the flag is raised is because it would require changing a good amount
+// of code and make implementations more complex with having to create
+// local vectors then copying them over. I figured this implementation's
+// weakness of not guaranteeing a change is only fully exposed if there
+// are tons of calls to it that don't actually make changes, of which 
+// there are none at the moment.
+
+std::vector<UserInterface::DisplayLine>& UserInterface::getDisplayLines()
+{
+    _isDirty = true;
+    onDirty.Invoke(this);
+    return displayLines;
 }
 
 std::string UserInterface::getFormattedLineLeftAlign(const std::string& line, int maximumCharactersAllowed)
