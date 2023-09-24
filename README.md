@@ -16,10 +16,10 @@ Currently waiting to clean up a few items to make an executable... TBD (you can 
 
 ## Current Progress
 
-I am a little more than half-way done with the base game. I have the main game loop working on a basic level, but there are still quite a few bugs and unhandled errors mainly due to a lack of input validation.
+The actual game looks barely complete, but I promise the core systems are almost finished and will bear fruit soon! The core battle system is pretty much finished, the UI framework is in a decent state, and the game state machine is looking good. One of the last big remaining pieces is a system for injecting game data into the executable to simplify the process of adding content to the game. Also there are still quite a few bugs and unhandled errors mainly due to a lack of input validation. Stay tuned!
 
 Broadly, here are the main items I'd like to address:
 
 1. **Configurable characters and UI through plain text or special script files read by the executable at runtime.** This would make it 100 times faster to tweak the game since I wouldn't need to recompile anything. It would probably also make it a lot easier for the game to communicate with any external game design tools.
-2. **Better visuals.** In its current state, I have bare-bones UI that can display text. It would be cool to add in some graphics like health bars or rough enemy ASCII art.
+2. **More visuals.** In its current state, I have bare-bones UI that can display text. It would be cool to add in some graphics like health bars or rough enemy ASCII art.
 3. **Actual levels.** Right now, the game sends you into a single battle. There should probably be more, right?
