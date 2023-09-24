@@ -20,14 +20,14 @@ public:
 	/// </summary>
 	void clearUserInterfaces();
 
-private:
-
-	std::vector<UserInterface*> userInterfaces;
-
 	/// <summary>
 	/// Clear the terminal window and display the current UserInterfaces
 	/// </summary>
 	void refreshDisplay();
+
+private:
+
+	std::vector<UserInterface*> userInterfaces;
 
 	void clearScreen(char fill = ' ');
 

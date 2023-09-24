@@ -11,6 +11,8 @@ UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInUnits
 {
     // Prevent width from being too small to accommodate horizontal padding (left and right)
     this->frameWidthInCharacters = std::max(frameWidthInCharacters, 2 * horizontalFramePaddingInCharacters);
+
+    this->displayLines.getOnCollectionChangedEvent().addListener(this);
 }
 
 UserInterface::~UserInterface() {}
@@ -27,7 +29,7 @@ std::string UserInterface::getDisplay()
         finalDisplay.append("//" + std::string(frameWidthInCharacters, ' ') + "//\n");
 
     // Content 
-    for (DisplayLine displayLine : displayLines)
+    for (DisplayLine displayLine : displayLines.get())
     {
         // Grab the corresponding format function based on the specified alignment
         FormatFunction f = alignmentTypeToAlignmentFunction[displayLine.alignment];
@@ -60,22 +62,9 @@ Event<UserInterface*>& UserInterface::getOnDirtyEvent()
 }
 
 
-// DESIGN CHOICE: A dedicated accessor function automatically raises
-// the isDirty flag to notify users of this object that a change to
-// the UI has LIKELY occurred (you probably wouldn't call the accessor
-// as a derived class unless you were changing it). The reason I didn't
-// use a setter to ensure the display lines are actually changing when
-// the flag is raised is because it would require changing a good amount
-// of code and make implementations more complex with having to create
-// local vectors then copying them over. I figured this implementation's
-// weakness of not guaranteeing a change is only fully exposed if there
-// are tons of calls to it that don't actually make changes, of which 
-// there are none at the moment.
 
-std::vector<UserInterface::DisplayLine>& UserInterface::getDisplayLines()
+ObservableCollection<std::vector<DisplayLine>>& UserInterface::getDisplayLines()
 {
-    _isDirty = true;
-    onDirty.Invoke(this);
     return displayLines;
 }
 
@@ -119,6 +108,12 @@ std::string UserInterface::getFormattedLineRightAlign(const std::string& line, i
         return line.substr(0, maximumCharactersAllowed);
     else
         return std::string(maximumCharactersAllowed - line.size(), ' ') + line;
+}
+
+void UserInterface::onNotify(const std::vector<DisplayLine, std::allocator<DisplayLine>>& modifiedDisplayLines)
+{
+    _isDirty = true;
+    onDirty.Invoke(this);
 }
 
 UserInterface::AlignmentToFunctionMap UserInterface::alignmentTypeToAlignmentFunction =

@@ -1,5 +1,5 @@
 #pragma once
-#include<list>
+#include <list>
 #include "InputReader.h"
 #include "Character.h"
 #include "GameState.h"
@@ -7,6 +7,7 @@
 #include "InputOptionsUserInterface.h"
 #include "OptionSelector.h"
 #include "Observer.h"
+#include "Canvas.h"
 
 // DESIGN CHOICE: GameManager inherits from Observer so it can respond to
 // input events. This implementation will need to change if there are
@@ -21,6 +22,9 @@ public:
 
 	// Start the game
 	void start();
+
+	// We choose not to make this a Canvas member function because its implementation is pretty specific to GameManager
+	void refreshCanvasWithCurrentUserInterfaces(Canvas& canvas);
 
 private:
 

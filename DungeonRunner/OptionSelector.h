@@ -50,7 +50,7 @@ inline T OptionSelector::queryOptions(InputReader* inputReader, std::string quer
 	}
 
 	userInterface->setMenuOptions(optionNames);
-	std::cout << userInterface->getDisplay() << std::endl;
+	//std::cout << userInterface->getDisplay() << std::endl;
 
 	// Tightly coupled with InputOptionsUserInterface, which labels each
 	// option with a number 0 - n
