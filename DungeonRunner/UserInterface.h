@@ -27,9 +27,6 @@ public:
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
 
-	// Check whether there has been an update to the UI
-	bool isDirty();
-
 	Event<UserInterface*>& getOnDirtyEvent();
 
 protected:
@@ -37,13 +34,6 @@ protected:
 	ObservableCollection<std::vector<DisplayLine>>& getDisplayLines();
 
 private:
-
-	// Flag to keep track of whether there is a change that has not been
-	// seen by the user of this object. It relies on the assumption that
-	// the owner sees the update when getDisplay() is called and that
-	// an update has occurred when getDisplayLines() is called by a
-	// derived class.
-	bool _isDirty;
 
 	ObservableCollection<std::vector<DisplayLine>> displayLines;
 

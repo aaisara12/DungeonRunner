@@ -7,7 +7,7 @@
 // is about twice its width.
 UserInterface::UserInterface(int frameWidthInCharacters, int framePaddingInUnits)
     :verticalFramePaddingInCharacters(framePaddingInUnits), 
-    horizontalFramePaddingInCharacters(framePaddingInUnits * 2), _isDirty(true)
+    horizontalFramePaddingInCharacters(framePaddingInUnits * 2)
 {
     // Prevent width from being too small to accommodate horizontal padding (left and right)
     this->frameWidthInCharacters = std::max(frameWidthInCharacters, 2 * horizontalFramePaddingInCharacters);
@@ -46,15 +46,10 @@ std::string UserInterface::getDisplay()
     // Lower border
     finalDisplay.append(std::string(frameWidthInCharacters + 4, '/') + '\n');
 
-    // Update has been processed
-    _isDirty = false;
 
     return finalDisplay;
 }
 
-// Check whether there has been an update to the UI
-
-bool UserInterface::isDirty() { return _isDirty; }
 
 Event<UserInterface*>& UserInterface::getOnDirtyEvent()
 {
@@ -112,7 +107,6 @@ std::string UserInterface::getFormattedLineRightAlign(const std::string& line, i
 
 void UserInterface::onNotify(const std::vector<DisplayLine, std::allocator<DisplayLine>>& modifiedDisplayLines)
 {
-    _isDirty = true;
     onDirty.Invoke(this);
 }
 
