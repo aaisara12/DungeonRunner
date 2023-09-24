@@ -8,6 +8,8 @@ Build a party of heroes to fight through dungeons of enemies in Pokemon-esque tu
 
 This is a personal project I've been working on for the past month intended to be used as an excuse to learn tools development. While the base game has lots of interesting technical challenges, my main focus is on building a companion desktop app that can be used to design the heroes, enemies, and levels in the game. This app will let designers create custom moves and effects, set character stats, draw ASCII art for the game, and more!
 
+For details on high-level design decisions I've made while making this project, see the [Progression Log](/Progression%20Log.txt).
+
 ## How to Play the Game
 
 Currently waiting to clean up a few items to make an executable... TBD (you can always just clone this repo and build one too).
