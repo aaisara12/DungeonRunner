@@ -143,6 +143,9 @@ void BattleGameState::initializeCharacterActions()
         BattleMove* selectedMove = optionSelector->queryOptions(inputReader, "Move Selection", character->getMoves());
 
         // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
+
+        std::string targetSelectionPrompt = std::format("Who should {} target?", character->getName());
+        currentBattleText.set(targetSelectionPrompt);
         std::vector<Character*> validTargets = getTargetCharacters(battlingCharacter, selectedMove->targetGroup);
 
         Character* selectedTarget = optionSelector->queryOptions(inputReader, "Target Selection", validTargets);
