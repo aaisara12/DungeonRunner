@@ -6,6 +6,7 @@
 #include "ChangeTextCommand.h"
 #include "EvaluateBattleStateCommand.h"
 #include "EndBattleCommand.h"
+#include <format>
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -137,6 +138,8 @@ void BattleGameState::initializeCharacterActions()
         InputReader* inputReader = battlingCharacter.inputReader;
 
         // Query for the move of this character 
+        std::string moveSelectionPrompt = std::format("What should {} do?", character->getName());
+        currentBattleText.set(moveSelectionPrompt);
         BattleMove* selectedMove = optionSelector->queryOptions(inputReader, "Move Selection", character->getMoves());
 
         // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
