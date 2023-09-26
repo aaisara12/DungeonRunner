@@ -50,11 +50,14 @@ inline T OptionSelector::queryOptions(InputReader* inputReader, std::string quer
 	}
 
 	userInterface->setMenuOptions(optionNames);
-	std::cout << userInterface->getDisplay() << std::endl;
 
 	// Tightly coupled with InputOptionsUserInterface, which labels each
 	// option with a number 0 - n
 	int selectionIndex = inputReader->requestInput(query) - '0';
+
+	// Clear out options so they won't display in the UI afterwards
+	optionNames.clear();
+	userInterface->setMenuOptions(optionNames);
 
 	onQueryCompleted.Invoke(true);
 

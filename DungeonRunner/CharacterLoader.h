@@ -4,5 +4,5 @@
 class CharacterLoader
 {
 public:
-	virtual std::list<Character*> getCharacters() = 0;
+	virtual std::vector<Character*> getCharacters() = 0;
 };

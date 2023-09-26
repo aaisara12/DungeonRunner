@@ -1,5 +1,5 @@
 #pragma once
-#include<list>
+#include <list>
 #include "InputReader.h"
 #include "Character.h"
 #include "GameState.h"
@@ -7,6 +7,8 @@
 #include "InputOptionsUserInterface.h"
 #include "OptionSelector.h"
 #include "Observer.h"
+#include "Canvas.h"
+#include "Party.h"
 
 // DESIGN CHOICE: GameManager inherits from Observer so it can respond to
 // input events. This implementation will need to change if there are
@@ -15,16 +17,20 @@
 class GameManager : public Observer<bool>
 {
 public:
-	GameManager(std::list<Character*> characters, InputReader* inputReader);
+	GameManager(std::vector<Character*> characters, InputReader * playerInputReader, InputReader * enemyInputReader);
 
 	~GameManager();
 
 	// Start the game
 	void start();
 
+	// We choose not to make this a Canvas member function because its implementation is pretty specific to GameManager
+	void refreshCanvasWithCurrentUserInterfaces(Canvas& canvas);
+
 private:
 
-	std::list<Character*> characters;
+	Party playerTeam;
+	std::vector<Character*> characters;
 	
 	OptionSelector* optionSelector;
 

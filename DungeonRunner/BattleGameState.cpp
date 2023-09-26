@@ -6,6 +6,7 @@
 #include "ChangeTextCommand.h"
 #include "EvaluateBattleStateCommand.h"
 #include "EndBattleCommand.h"
+#include <format>
 
 // DESIGN CHOICE: Dependency injection -- inject InputReader object
 // into battle process so that onus is on external scripts to
@@ -137,9 +138,14 @@ void BattleGameState::initializeCharacterActions()
         InputReader* inputReader = battlingCharacter.inputReader;
 
         // Query for the move of this character 
+        std::string moveSelectionPrompt = std::format("What should {} do?", character->getName());
+        currentBattleText.set(moveSelectionPrompt);
         BattleMove* selectedMove = optionSelector->queryOptions(inputReader, "Move Selection", character->getMoves());
 
         // TODO: Curate characters to choose from based on selected move (heal, AOE, single target, etc.)
+
+        std::string targetSelectionPrompt = std::format("Who should {} target?", character->getName());
+        currentBattleText.set(targetSelectionPrompt);
         std::vector<Character*> validTargets = getTargetCharacters(battlingCharacter, selectedMove->targetGroup);
 
         Character* selectedTarget = optionSelector->queryOptions(inputReader, "Target Selection", validTargets);
@@ -151,7 +157,7 @@ void BattleGameState::initializeCharacterActions()
 
         queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
         queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction, this)));
-        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
+        //queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
     }
 }
 

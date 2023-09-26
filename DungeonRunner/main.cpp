@@ -2,18 +2,21 @@
 #include "CharacterLoader.h"
 #include "DummyCharacterLoader.h"
 #include "BasicInputReader.h"
+#include "ZeroInputReader.h"
 
 int main()
 {
 	// Get Characters
 	CharacterLoader* characterLoader = new DummyCharacterLoader();
-	InputReader* inputReader = new BasicInputReader();
+	InputReader* playerInput = new BasicInputReader();
+	InputReader* enemyInput = new ZeroInputReader();
 
 	// Do something
-	GameManager game(characterLoader->getCharacters(), inputReader);
+	GameManager game(characterLoader->getCharacters(), playerInput, enemyInput);
 
 	game.start();
 
 	delete characterLoader;
-	delete inputReader;
+	delete playerInput;
+	delete enemyInput;
 }

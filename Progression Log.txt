@@ -23,6 +23,16 @@ arose as a result of a previous question are nested within the question.
 			B> Event-listener pattern
 				- More complex
 				- Reduce pollution in other classes
+				* When should the visuals be updated on screen?
+				A: Every tick of the game's update loop
+					- This turned out to be problematic for UI related to
+					  input since it's possible for several input queries
+					  to be queued for the same game frame.
+				B> Update whenever there's a change to any of the active UI
+					- While this means there will be a refresh for every minor
+					  change in the UI, there are so few changes that the
+					  added complexity of a more efficient option like batching
+					  would probably not be worth it.
 
 	* How do I keep UI style consistent?
 		A: Manually type out each UI's layout 

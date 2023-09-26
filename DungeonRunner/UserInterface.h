@@ -1,10 +1,17 @@
 #pragma once
 #include <string>
 #include "Observer.h"
+#include "Event.h"
 #include <vector>
 #include <unordered_map>
+#include "ObservableCollection.h"
 
-class UserInterface
+struct DisplayLine;
+
+/// <summary>
+/// This is a base class that contains functionality for displaying text on the screen. 
+/// </summary>
+class UserInterface : public Observer<const std::vector<DisplayLine>&>
 {
 public:
 	enum ContentAlignmentType
@@ -15,57 +22,20 @@ public:
 	};
 
 	UserInterface(int frameWidthInCharacters, int framePaddingInUnits);
-	inline virtual ~UserInterface() {}
+	virtual ~UserInterface();
 
 	// Returns a framed visual representation of the UI
 	std::string getDisplay();
 
-	// Check whether there has been an update to the UI
-	inline bool isDirty() { return _isDirty; }
-
+	Event<UserInterface*>& getOnDirtyEvent();
 
 protected:
 
-	// Wrapper around a line to display that includes alignment information 
-	// that UserInterface uses to "style" each line specifically
-	struct DisplayLine
-	{
-		std::string content;
-		ContentAlignmentType alignment;
-
-		DisplayLine(std::string content, ContentAlignmentType alignment)
-			:content(content), alignment(alignment)
-		{}
-	};
-
-
-	// DESIGN CHOICE: A dedicated accessor function automatically raises
-	// the isDirty flag to notify users of this object that a change to
-	// the UI has LIKELY occurred (you probably wouldn't call the accessor
-	// as a derived class unless you were changing it). The reason I didn't
-	// use a setter to ensure the display lines are actually changing when
-	// the flag is raised is because it would require changing a good amount
-	// of code and make implementations more complex with having to create
-	// local vectors then copying them over. I figured this implementation's
-	// weakness of not guaranteeing a change is only fully exposed if there
-	// are tons of calls to it that don't actually make changes, of which 
-	// there are none at the moment.
-	std::vector<DisplayLine>& getDisplayLines()
-	{
-		_isDirty = true;
-		return displayLines;
-	}
+	ObservableCollection<std::vector<DisplayLine>>& getDisplayLines();
 
 private:
 
-	// Flag to keep track of whether there is a change that has not been
-	// seen by the user of this object. It relies on the assumption that
-	// the owner sees the update when getDisplay() is called and that
-	// an update has occurred when getDisplayLines() is called by a
-	// derived class.
-	bool _isDirty;
-
-	std::vector<DisplayLine> displayLines;
+	ObservableCollection<std::vector<DisplayLine>> displayLines;
 
 	// Frame width is defined by number of characters between first "//" and last "//"
 	// so that a border of thickness 2 = "//" is always guaranteed
@@ -95,6 +65,22 @@ private:
 	static AlignmentToFunctionMap alignmentTypeToAlignmentFunction;
 
 
+	Event<UserInterface*> onDirty;
+
+	// Inherited via Observer
+	virtual void onNotify(const std::vector<DisplayLine, std::allocator<DisplayLine>>& modifiedDisplayLines);
+
 };
 
 
+// Wrapper around a line to display that includes alignment information 
+// that UserInterface uses to "style" each line specifically
+struct DisplayLine
+{
+	std::string content;
+	UserInterface::ContentAlignmentType alignment;
+
+	DisplayLine(std::string content, UserInterface::ContentAlignmentType alignment)
+		:content(content), alignment(alignment)
+	{}
+};
