@@ -12,7 +12,7 @@ For details on high-level design decisions I've made while making this project, 
 
 ## How to Play the Game
 
-You can either clone the repo and compile then execute, or you can just download the executable I've provided (I swear it's not a virus!).
+You can either clone the repo and compile then execute, or you can just download the executable I've provided under Releases.
 
 ## Current Progress
 
