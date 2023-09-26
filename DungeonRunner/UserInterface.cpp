@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include "Utils.h"
 
 // DESIGN CHOICE: Derive vertical and horizontal padding from abstract "units"
 // to make it easier for the implementor of a derived class to get their intended
@@ -28,12 +29,45 @@ std::string UserInterface::getDisplay()
     for (int i = 0; i < verticalFramePaddingInCharacters; i++)
         finalDisplay.append("//" + std::string(frameWidthInCharacters, ' ') + "//\n");
 
-    // Content 
-    for (DisplayLine displayLine : displayLines.get())
+    int maxCharactersThatCanFitOnLine = frameWidthInCharacters - 2 * horizontalFramePaddingInCharacters;
+
+    // Copy construct since modifying directly triggers UI update and signals change to UI, which might end up calling this
+    // Admittedly, this is pretty expensive to do every time we call getDisplay, so it might be worth looking into caching
+    std::vector<DisplayLine> processedDisplayLines = displayLines.get();
+
+    // Apply line wrapping to any lines that exceed max characters
+    for (auto p = processedDisplayLines.begin(); p != processedDisplayLines.end();)
+    {
+        std::string remainingSentence = p->content;
+        std::vector<DisplayLine> additionalLinesGenerated;
+        while (!remainingSentence.empty())
+        {
+            TruncatedSentence res = truncateSentence(remainingSentence, maxCharactersThatCanFitOnLine);
+            remainingSentence = res.remainder;
+            additionalLinesGenerated.push_back(DisplayLine(res.truncated, p->alignment));
+        }
+
+        if (additionalLinesGenerated.size() > 0)
+        {
+            auto ptrToStartOfInsertion = processedDisplayLines.erase(p);
+            ptrToStartOfInsertion = processedDisplayLines.insert(ptrToStartOfInsertion, additionalLinesGenerated.begin(), additionalLinesGenerated.end());
+            
+            // Fast-forward pointer to the next line it hasn't processed
+            ptrToStartOfInsertion += additionalLinesGenerated.size();
+            p = ptrToStartOfInsertion;
+        }
+        else
+        {
+            p++;
+        }
+    }
+
+
+    for (DisplayLine displayLine : processedDisplayLines)
     {
         // Grab the corresponding format function based on the specified alignment
         FormatFunction f = alignmentTypeToAlignmentFunction[displayLine.alignment];
-        std::string formattedLine = (this->*f)(displayLine.content, frameWidthInCharacters - 2 * horizontalFramePaddingInCharacters);
+        std::string formattedLine = (this->*f)(displayLine.content, maxCharactersThatCanFitOnLine);
 
         // Construct and add a row of the UI (including border)
         finalDisplay.append("//" + std::string(horizontalFramePaddingInCharacters, ' ') + formattedLine + std::string(horizontalFramePaddingInCharacters, ' ') + "//\n");
