@@ -157,7 +157,7 @@ void BattleGameState::initializeCharacterActions()
 
         queuedBattleCommands.push_back(DelayedCommand(0.0f, new DescribeBattleInteractionCommand(interaction)));
         queuedBattleCommands.push_back(DelayedCommand(2.0f, new ApplyBattleInteractionCommand(interaction, this)));
-        queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
+        //queuedBattleCommands.push_back(DelayedCommand(2.0f, new ClearBattleInteractionCommand()));
     }
 }
 
