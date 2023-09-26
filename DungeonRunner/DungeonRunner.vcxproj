@@ -180,6 +180,7 @@
     <ClInclude Include="TextDisplayUserInterface.h" />
     <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="ZeroInputReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplyBattleInteractionCommand.cpp" />

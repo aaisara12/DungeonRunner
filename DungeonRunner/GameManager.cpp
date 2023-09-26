@@ -15,7 +15,7 @@
 #include "PartyUserInterface.h"
 
 
-GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
+GameManager::GameManager(std::list<Character*> characters, InputReader * playerInputReader, InputReader * enemyInputReader)
 	: characters(characters), currentState(nullptr)
 {
 	inputOptionsUserInterface = new InputOptionsUserInterface();
@@ -30,13 +30,13 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	// TODO: Implement some way of selecting the game characters to go into the battle
 	// ASSUMPTION: ++ returns post-increment value
 	std::vector<Character*> ally(++characters.begin(), characters.end());
-	InputReader* allyInput = inputReader;
+	InputReader* allyInput = playerInputReader;
 	std::vector<Character*> enemy(characters.begin(), ++characters.begin());
-	InputReader* enemyInput = inputReader;
+	InputReader* enemyInput = enemyInputReader;
 
 	battleState = new BattleGameState(ally, enemy, allyInput, enemyInput, optionSelector);
 
-	hubState = new MenuGameState(std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}}, optionSelector, inputReader);
+	hubState = new MenuGameState(std::vector<std::pair<GameState*, std::string>>{{battleState, "Battle"}, {exitState, "Quit"}}, optionSelector, playerInputReader);
 
 	// Initialize the user interfaces
 	userInterfaces =

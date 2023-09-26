@@ -17,7 +17,7 @@
 class GameManager : public Observer<bool>
 {
 public:
-	GameManager(std::list<Character*> characters, InputReader* inputReader);
+	GameManager(std::list<Character*> characters, InputReader * playerInputReader, InputReader * enemyInputReader);
 
 	~GameManager();
 
