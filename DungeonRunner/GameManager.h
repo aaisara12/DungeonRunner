@@ -17,7 +17,7 @@
 class GameManager : public Observer<bool>
 {
 public:
-	GameManager(std::list<Character*> characters, InputReader * playerInputReader, InputReader * enemyInputReader);
+	GameManager(std::vector<Character*> characters, InputReader * playerInputReader, InputReader * enemyInputReader);
 
 	~GameManager();
 
@@ -30,7 +30,7 @@ public:
 private:
 
 	Party playerTeam;
-	std::list<Character*> characters;
+	std::vector<Character*> characters;
 	
 	OptionSelector* optionSelector;
 
