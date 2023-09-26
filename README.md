@@ -12,9 +12,11 @@ For details on high-level design decisions I've made while making this project, 
 
 ## How to Play the Game
 
-Currently waiting to clean up a few items to make an executable... TBD (you can always just clone this repo and build one too).
+You can either clone the repo and compile then execute, or you can just download the executable I've provided (I swear it's not a virus!).
 
 ## Current Progress
+
+![Gul'dan's move selection](/images/dungeon_runner_guldan_move.png)
 
 The actual game looks barely complete, but I promise the core systems are almost finished and will bear fruit soon! The core battle system is pretty much finished, the UI framework is in a decent state, and the game state machine is looking good. One of the last big remaining pieces is a system for injecting game data into the executable to simplify the process of adding content to the game. Also there are still quite a few bugs and unhandled errors mainly due to a lack of input validation. Stay tuned!
 
