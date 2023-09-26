@@ -13,19 +13,6 @@ Character::Character(std::string name)
 	};
 }
 
-Character::Character(std::string name, std::unordered_map<StatType, int> stats)
-	:name(name)
-{
-	this->stats = std::unordered_map<StatType, int>
-	{
-		{StatType::MAX_HP, stats.count(StatType::MAX_HP) != 0? stats[StatType::MAX_HP] : 0},
-		{StatType::CUR_HP, stats.count(StatType::CUR_HP) != 0 ? stats[StatType::CUR_HP] : 0},
-		{StatType::ATK, stats.count(StatType::ATK) != 0 ? stats[StatType::ATK] : 0},
-		{StatType::DEF, stats.count(StatType::DEF) != 0 ? stats[StatType::DEF] : 0},
-		{StatType::HEAL, stats.count(StatType::HEAL) != 0 ? stats[StatType::HEAL] : 0}
-	};
-}
-
 Character::Character(std::string name, std::vector<BattleMove*> moves)
 	:name(name), moves(moves)
 {
@@ -35,6 +22,19 @@ Character::Character(std::string name, std::vector<BattleMove*> moves)
 		{StatType::CUR_HP, 10},
 		{StatType::ATK, 1},
 		{StatType::DEF, 0}
+	};
+}
+
+Character::Character(std::string name, std::vector<BattleMove*> moves, std::unordered_map<StatType, int> stats)
+	:name(name), moves(moves)
+{
+	this->stats = std::unordered_map<StatType, int>
+	{
+		{StatType::MAX_HP, stats.count(StatType::MAX_HP) != 0 ? stats[StatType::MAX_HP] : 0},
+		{StatType::CUR_HP, stats.count(StatType::CUR_HP) != 0 ? stats[StatType::CUR_HP] : 0},
+		{StatType::ATK, stats.count(StatType::ATK) != 0 ? stats[StatType::ATK] : 0},
+		{StatType::DEF, stats.count(StatType::DEF) != 0 ? stats[StatType::DEF] : 0},
+		{StatType::HEAL, stats.count(StatType::HEAL) != 0 ? stats[StatType::HEAL] : 0}
 	};
 }
 
@@ -69,6 +69,8 @@ BattleOutcomeData Character::applyBattleInteraction(BattleInteraction battleInte
 		data.isHit = true;
 		data.damageTaken = damageTaken;
 		data.healingReceived = healingReceived;
+
+		healthDataChangedEvent.Invoke(ContainerUpdateEventData(stats[Character::CUR_HP], stats[Character::MAX_HP], this));
 
 		// Run through all conditions and check for any interactions
 		std::list<BattleInteraction> generatedInteractions;

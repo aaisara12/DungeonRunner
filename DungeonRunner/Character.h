@@ -22,8 +22,8 @@ public:
 	};
 
 	Character(std::string name);
-	Character(std::string name, std::unordered_map<StatType, int> stats);
 	Character(std::string name, std::vector<BattleMove*> moves);
+	Character(std::string name, std::vector<BattleMove*> moves, std::unordered_map<StatType, int> stats);
 
 	virtual ~Character() {};	// Calls derived class destructors
 
@@ -73,8 +73,9 @@ struct ContainerUpdateEventData
 {
 	int newContainerMax;
 	int newContainerCurrent;
+	Character* owner;
 
-	ContainerUpdateEventData(int newContainerCurrent, int newContainerMax)
-		: newContainerCurrent(newContainerCurrent), newContainerMax(newContainerMax)
+	ContainerUpdateEventData(int newContainerCurrent, int newContainerMax, Character* owner)
+		: newContainerCurrent(newContainerCurrent), newContainerMax(newContainerMax), owner(owner)
 	{}
 };

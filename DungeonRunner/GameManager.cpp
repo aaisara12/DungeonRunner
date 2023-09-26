@@ -12,6 +12,7 @@
 #include "InputOptionsUserInterface.h"
 #include "TextDisplayUserInterface.h"
 #include "Canvas.h"
+#include "PartyUserInterface.h"
 
 
 GameManager::GameManager(std::list<Character*> characters, InputReader* inputReader)
@@ -41,9 +42,18 @@ GameManager::GameManager(std::list<Character*> characters, InputReader* inputRea
 	userInterfaces =
 	{
 		{hubState, std::list<UserInterface*> {new MainMenuUserInterface("DUNGEON RUNNER")}},
-		{battleState, std::list<UserInterface*> {new TextDisplayUserInterface(dynamic_cast<BattleGameState*>(battleState)->getCurrentBattleTextChangedEvent())}},
+		{battleState, std::list<UserInterface*> {
+			new PartyUserInterface(playerTeam),
+			new TextDisplayUserInterface(dynamic_cast<BattleGameState*>(battleState)->getCurrentBattleTextChangedEvent())
+		}},
 		{exitState, std::list<UserInterface*>()}
 	};
+
+	// For stats tracking
+	for (Character* member : ally)
+	{
+		playerTeam.addMemberToParty(member);
+	}
 
 	// Initialize start state
 	currentState = hubState;

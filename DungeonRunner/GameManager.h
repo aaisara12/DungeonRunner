@@ -8,6 +8,7 @@
 #include "OptionSelector.h"
 #include "Observer.h"
 #include "Canvas.h"
+#include "Party.h"
 
 // DESIGN CHOICE: GameManager inherits from Observer so it can respond to
 // input events. This implementation will need to change if there are
@@ -28,6 +29,7 @@ public:
 
 private:
 
+	Party playerTeam;
 	std::list<Character*> characters;
 	
 	OptionSelector* optionSelector;
