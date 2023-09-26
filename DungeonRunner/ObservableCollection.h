@@ -16,6 +16,25 @@ public:
 		onCollectionChanged.Invoke(collection);
 	}
 
+	inline typename CollectionOfT::iterator insert(
+		typename CollectionOfT::const_iterator position, 
+		typename CollectionOfT::const_iterator start, 
+		typename CollectionOfT::const_iterator end)
+	{
+		typename CollectionOfT::iterator res = collection.insert(position, start, end);
+		onCollectionChanged.Invoke(collection);
+		return res;
+	}
+
+	inline typename CollectionOfT::iterator erase(
+		typename CollectionOfT::const_iterator position
+	)
+	{
+		typename CollectionOfT::iterator res = collection.erase(position);
+		onCollectionChanged.Invoke(collection);
+		return res;
+	}
+
 	inline void clear()
 	{
 		collection.clear();
@@ -27,7 +46,7 @@ public:
 		return onCollectionChanged;
 	}
 
-	inline const CollectionOfT get()
+	inline const CollectionOfT& get()
 	{
 		return collection;
 	}
